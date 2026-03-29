@@ -5,28 +5,7 @@ const Question = require("../../models/question.model");
 // ===========================
 exports.createQuestion = async (req, res) => {
   try {
-    const {
-      question,
-      answer,
-      hawala1,
-      hawala2,
-      hawala3,
-      category,
-      slug,
-      metaTitle,
-      metaDescription,
-      keywords,
-    } = req.body;
-
-    if (!question || !answer || !category) {
-      return res.status(400).json({ success: false, message: "Question, answer, and category are required." });
-    }
-
-    // Slug check
-    const existing = await Question.findOne({ slug });
-    if (existing) {
-      return res.status(400).json({ success: false, message: "Slug already exists. Use a different question." });
-    }
+    const { question, answer, hawala1, hawala2, hawala3, category } = req.body;
 
     const newQuestion = await Question.create({
       question,
@@ -35,61 +14,56 @@ exports.createQuestion = async (req, res) => {
       hawala2,
       hawala3,
       category,
-      slug,
-      metaTitle,
-      metaDescription,
-      keywords,
     });
 
-    return res.status(200).json({
+    return res.json({
       success: true,
       message: "Question added successfully",
       data: newQuestion,
     });
   } catch (err) {
-    console.error(err);
+    console.log(err);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
 // ===========================
-// 📌 Get All Questions
+// 📌 Get All Questions with Pagination
 // ===========================
 exports.getQuestions = async (req, res) => {
   try {
-    const questions = await Question.find().sort({ createdAt: -1 });
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = parseInt(req.query.skip) || 0;
+
+    const questions = await Question.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
     return res.json({ success: true, data: questions });
   } catch (err) {
-    console.error(err);
+    console.log(err);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
 // ===========================
-// 📌 Get Question by Slug (Public)
-// ===========================
-exports.getQuestionBySlug = async (req, res) => {
-  try {
-    const { slug } = req.params;
-    const question = await Question.findOne({ slug });
-    if (!question) return res.status(404).json({ success: false, message: "Question not found" });
-    return res.json({ success: true, data: question });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ success: false, message: "Server Error" });
-  }
-};
-
-// ===========================
-// 📌 Get Questions by Category
+// 📌 Get Questions by Category with Pagination
 // ===========================
 exports.getQuestionsByCategory = async (req, res) => {
   try {
-    const { category } = req.params;
-    const questions = await Question.find({ category }).sort({ createdAt: -1 });
+    const category = req.params.category;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = parseInt(req.query.skip) || 0;
+
+    const questions = await Question.find({ category })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
     return res.json({ success: true, data: questions });
   } catch (err) {
-    console.error(err);
+    console.log(err);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -99,11 +73,20 @@ exports.getQuestionsByCategory = async (req, res) => {
 // ===========================
 exports.updateQuestion = async (req, res) => {
   try {
-    const { id } = req.params;
-    const updated = await Question.findByIdAndUpdate(id, req.body, { new: true });
-    return res.json({ success: true, data: updated });
+    const id = req.params.id;
+    const updatedData = req.body;
+
+    const updated = await Question.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+
+    return res.json({
+      success: true,
+      message: "Question updated successfully",
+      data: updated,
+    });
   } catch (err) {
-    console.error(err);
+    console.log(err);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -113,11 +96,16 @@ exports.updateQuestion = async (req, res) => {
 // ===========================
 exports.deleteQuestion = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
+
     await Question.findByIdAndDelete(id);
-    return res.json({ success: true, message: "Question deleted successfully" });
+
+    return res.json({
+      success: true,
+      message: "Question deleted successfully",
+    });
   } catch (err) {
-    console.error(err);
+    console.log(err);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
