@@ -19,12 +19,19 @@ router.post("/add-category", async (req, res) => {
 // ✅ Add Question / Fatwa
 router.post("/add-question", async (req, res) => {
   try {
-    const data = req.body;
-    const q = new Question(data);
+    const { question, answer, category, hawala1, hawala2, hawala3 } = req.body;
+
+    if (!question || !answer || !category) {
+      return res.status(400).json({ success: false, message: "Question, Answer, and Category are required" });
+    }
+
+    const q = new Question({ question, answer, category, hawala1, hawala2, hawala3 });
     await q.save();
+
     res.json({ success: true, message: "✅ Fatwa Added Successfully", data: q });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    console.error(error);
+    res.status(500).json({ success: false, message: error.message });
   }
 });
 
