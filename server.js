@@ -22,7 +22,7 @@ server.get('/', (req, res) => {
 require('./app/routes/admin/default.routes.js')(server);
 
 // Public Question Routes (For Frontend)
-const questionRoutes = require('./app/routes/admin/question.routes.js');
+const questionRoutes = require('./app/routes/question.routes.js');
 server.use('/api/questions', questionRoutes);
 
 const categoryRoutes = require('./app/routes/category.routes');
