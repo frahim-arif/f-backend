@@ -1,6 +1,4 @@
-
 const mongoose = require("mongoose");
-const slugify = require("slugify");
 
 const questionSchema = new mongoose.Schema({
   question: { type: String, required: true },
@@ -9,14 +7,16 @@ const questionSchema = new mongoose.Schema({
   hawala2: { type: String },
   hawala3: { type: String },
   category: { type: String, required: true },
-  slug: { type: String, unique: true }, // ✅ slug field
+  slug: { type: String, unique: true },
   createdAt: { type: Date, default: Date.now },
 });
 
-// Pre-save hook to generate slug from question
+// ✅ Safe slug (Urdu + Arabic supported)
 questionSchema.pre("save", function (next) {
   if (this.isModified("question") || !this.slug) {
-    this.slug = slugify(this.question, { lower: true, strict: true });
+    this.slug = encodeURIComponent(
+      this.question.trim().replace(/\s+/g, "-")
+    );
   }
   next();
 });

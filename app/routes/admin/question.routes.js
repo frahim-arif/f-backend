@@ -2,29 +2,19 @@ const express = require("express");
 const router = express.Router();
 const questionController = require("../../controllers/admin/question.controller");
 
-// ===========================
-// 📌 Create New Question
-// ===========================
+// Create
 router.post("/", questionController.createQuestion);
 
-// ===========================
-// 📌 Get All Questions
-// ===========================
+// Get all
 router.get("/", questionController.getQuestions);
 
-// ===========================
-// 📌 Get Questions by Category
-// ===========================
+// Get by category
 router.get("/category/:category", questionController.getQuestionsByCategory);
 
-// ===========================
-// 📌 Update Question
-// ===========================
+// Update
 router.put("/:id", questionController.updateQuestion);
 
-// ===========================
-// 📌 Delete Question
-// ===========================
+// Delete
 router.delete("/:id", questionController.deleteQuestion);
 
 module.exports = router;

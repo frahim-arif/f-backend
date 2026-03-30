@@ -7,7 +7,7 @@ exports.createQuestion = async (req, res) => {
   try {
     const { question, answer, hawala1, hawala2, hawala3, category } = req.body;
 
-    const newQuestion = await Question.create({
+    const newQuestion = new Question({
       question,
       answer,
       hawala1,
@@ -16,19 +16,24 @@ exports.createQuestion = async (req, res) => {
       category,
     });
 
+    await newQuestion.save();
+
     return res.json({
       success: true,
       message: "Question added successfully",
       data: newQuestion,
     });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ success: false, message: "Server Error" });
+    console.error("❌ ERROR:", err);
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
 // ===========================
-// 📌 Get All Questions with Pagination
+// 📌 Get All Questions
 // ===========================
 exports.getQuestions = async (req, res) => {
   try {
@@ -42,29 +47,26 @@ exports.getQuestions = async (req, res) => {
 
     return res.json({ success: true, data: questions });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ success: false, message: "Server Error" });
+    console.error(err);
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
 // ===========================
-// 📌 Get Questions by Category with Pagination
+// 📌 Get Questions by Category
 // ===========================
 exports.getQuestionsByCategory = async (req, res) => {
   try {
     const category = req.params.category;
-    const limit = parseInt(req.query.limit) || 5;
-    const skip = parseInt(req.query.skip) || 0;
 
-    const questions = await Question.find({ category })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
+    const questions = await Question.find({ category }).sort({
+      createdAt: -1,
+    });
 
     return res.json({ success: true, data: questions });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ success: false, message: "Server Error" });
+    console.error(err);
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -74,9 +76,8 @@ exports.getQuestionsByCategory = async (req, res) => {
 exports.updateQuestion = async (req, res) => {
   try {
     const id = req.params.id;
-    const updatedData = req.body;
 
-    const updated = await Question.findByIdAndUpdate(id, updatedData, {
+    const updated = await Question.findByIdAndUpdate(id, req.body, {
       new: true,
     });
 
@@ -86,8 +87,8 @@ exports.updateQuestion = async (req, res) => {
       data: updated,
     });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ success: false, message: "Server Error" });
+    console.error(err);
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -105,7 +106,7 @@ exports.deleteQuestion = async (req, res) => {
       message: "Question deleted successfully",
     });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ success: false, message: "Server Error" });
+    console.error(err);
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
