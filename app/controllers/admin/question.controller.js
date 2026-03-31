@@ -70,6 +70,7 @@ exports.getQuestionsByCategory = async (req, res) => {
   }
 };
 
+
 // ===========================
 // 📌 Update Question
 // ===========================
@@ -108,5 +109,34 @@ exports.deleteQuestion = async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// ===========================
+// 📌 Get Question by Slug
+// ===========================
+exports.getQuestionBySlug = async (req, res) => {
+  try {
+    const slug = req.params.slug;
+
+    const question = await Question.findOne({ slug });
+
+    if (!question) {
+      return res.status(404).json({
+        success: false,
+        message: "Question not found",
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: question,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };

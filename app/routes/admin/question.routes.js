@@ -8,6 +8,9 @@ router.post("/", questionController.createQuestion);
 // Get all
 router.get("/", questionController.getQuestions);
 
+// ✅ Get by slug (ADD THIS)
+router.get("/slug/:slug", questionController.getQuestionBySlug);
+
 // Get by category
 router.get("/category/:category", questionController.getQuestionsByCategory);
 
