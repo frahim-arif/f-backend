@@ -21,6 +21,15 @@ module.exports = (app) => {
     }
   });
 
+  app.delete('/api/admin/majameen/:id', async (req, res) => {
+  try {
+    await Majmoon.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: "Deleted successfully" });
+  } catch (err) {
+    res.json({ success: false, error: err.message });
+  }
+});
+
   // ✅ GET SINGLE
   app.get('/api/majameen/:id', async (req, res) => {
     try {
