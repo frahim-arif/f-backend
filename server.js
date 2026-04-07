@@ -20,6 +20,8 @@ server.get('/', (req, res) => {
 
 // Admin Default Routes
 require('./app/routes/admin/default.routes.js')(server);
+require('./app/routes/admin/book.routes.js')(server);
+require('./app/routes/admin/majmoon.routes.js')(server);
 
 // Public Question Routes (For Frontend)
 // const questionRoutes = require('./app/routes/question.routes.js');
