@@ -7,13 +7,29 @@ const fetch = require("node-fetch"); // ✅ required if Node < 18
 function createSlug(text) {
   if (!text) return "no-slug";
 
-  return text
+  const urduMap = {
+    ا: "a", آ: "aa", ب: "b", پ: "p", ت: "t", ٹ: "t",
+    ث: "s", ج: "j", چ: "ch", ح: "h", خ: "kh",
+    د: "d", ڈ: "d", ذ: "z", ر: "r", ڑ: "r",
+    ز: "z", ژ: "zh", س: "s", ش: "sh", ص: "s",
+    ض: "z", ط: "t", ظ: "z", ع: "a", غ: "gh",
+    ف: "f", ق: "q", ک: "k", گ: "g", ل: "l",
+    م: "m", ن: "n", و: "w", ہ: "h", ھ: "h",
+    ء: "", ی: "y", ے: "e"
+  };
+
+  let slug = text
+    .split("")
+    .map(char => urduMap[char] || char) // convert Urdu → English
+    .join("");
+
+  return slug
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "") // allow words + remove special chars
-    .replace(/\s+/g, "-") // spaces → hyphen
+    .replace(/[^\w\s-]/g, "") // remove special chars
+    .replace(/\s+/g, "-")
     .split("-")
-    .filter(Boolean) // empty remove
-    .slice(0, 6) // max 5–6 words (SEO best)
+    .filter(Boolean)
+    .slice(0, 6)
     .join("-");
 }
 
