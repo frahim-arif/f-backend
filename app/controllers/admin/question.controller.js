@@ -5,12 +5,15 @@ const fetch = require("node-fetch"); // ✅ required if Node < 18
 // 🔥 Slug Generator Function
 // ===========================
 function createSlug(text) {
+  if (!text) return "no-slug";
+
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, "-")
+    .replace(/[^\w\s-]/g, "") // allow words + remove special chars
+    .replace(/\s+/g, "-") // spaces → hyphen
     .split("-")
-    .slice(0, 8) // max 8 words
+    .filter(Boolean) // empty remove
+    .slice(0, 6) // max 5–6 words (SEO best)
     .join("-");
 }
 
@@ -21,14 +24,16 @@ exports.createQuestion = async (req, res) => {
   try {
     const { question, answer, hawala1, hawala2, hawala3, category } = req.body;
 
-    // 🔥 1. Generate slug
-    let slug = createSlug(question);
+    // 🔥 1. Generate clean slug
+let baseSlug = createSlug(question);
+let slug = baseSlug;
 
-    // 🔥 2. Ensure unique slug
-    const exists = await Question.findOne({ slug });
-    if (exists) {
-      slug = slug + "-" + Date.now();
-    }
+// 🔥 2. Ensure unique slug
+let count = 1;
+while (await Question.findOne({ slug })) {
+  slug = `${baseSlug}-${count}`;
+  count++;
+}
 
     // 🔥 3. Create question
     const newQuestion = new Question({
