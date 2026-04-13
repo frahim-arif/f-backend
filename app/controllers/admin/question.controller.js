@@ -29,7 +29,7 @@ function createSlug(text) {
     .replace(/\s+/g, "-")
     .split("-")
     .filter(Boolean)
-    .slice(0, 6)
+    .slice(0, 10)
     .join("-");
 }
 
