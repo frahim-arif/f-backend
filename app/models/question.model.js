@@ -11,13 +11,4 @@ const questionSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-// ✅ Safe slug (Urdu + Arabic supported)
-questionSchema.pre("save", async function () {
-  if (this.isModified("question") || !this.slug) {
-    this.slug = encodeURIComponent(
-      this.question.trim().replace(/\s+/g, "-")
-    );
-  }
-});
-
 module.exports = mongoose.model("Question", questionSchema);
