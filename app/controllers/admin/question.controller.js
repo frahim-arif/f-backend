@@ -109,29 +109,20 @@ exports.getQuestions = async (req, res) => {
 };
 
 // ===========================
-// 📌 Get Questions by Category (with pagination)
+// 📌 Get Questions by Category
+// ===========================
 exports.getQuestionsByCategory = async (req, res) => {
   try {
     const category = req.params.category;
 
-    const limit = parseInt(req.query.limit) || 5;
-    const skip = parseInt(req.query.skip) || 0;
-
-    const questions = await Question.find({ category })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
-
-    return res.json({
-      success: true,
-      data: questions,
+    const questions = await Question.find({ category }).sort({
+      createdAt: -1,
     });
+
+    return res.json({ success: true, data: questions });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
