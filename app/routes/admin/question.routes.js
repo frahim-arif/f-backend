@@ -19,5 +19,4 @@ router.put("/:id", questionController.updateQuestion);
 
 // Delete
 router.delete("/:id", questionController.deleteQuestion);
-
 module.exports = router;
