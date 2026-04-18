@@ -3,7 +3,6 @@ const fetch = require("node-fetch"); // ✅ required if Node < 18
 
 // ===========================
 // 🔥 Slug Generator Function
-// ===========================
 function createSlug(text) {
   if (!text) return "no-slug";
 
@@ -20,29 +19,43 @@ function createSlug(text) {
 
   let slug = text
     .split("")
-    .map(char => urduMap[char] || char) // convert Urdu → English
+    .map(char => urduMap[char] || char)
     .join("");
 
   return slug
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "") // remove special chars
+    .replace(/[^\w\s-]/g, "")
     .replace(/\s+/g, "-")
     .split("-")
     .filter(Boolean)
-    .slice(0, 10)
+    .slice(0, 12)
     .join("-");
 }
-
 // ===========================
 // 📌 Create New Question
 // ===========================
 exports.createQuestion = async (req, res) => {
   try {
-    const { question, answer, hawala1, hawala2, hawala3, category } = req.body;
+    const {
+  question,
+  answer,
+  hawala1,
+  hawala2,
+  hawala3,
+  category,
+  metaTitle,
+  metaDescription,
+  keywords,
+  slug: frontendSlug
+} = req.body;
 
     // 🔥 1. Generate clean slug
-let baseSlug = createSlug(question);
+let baseSlug = frontendSlug || createSlug(question);
 let slug = baseSlug;
+
+const keywordArray = keywords
+  ? keywords.split(",").map(k => k.trim())
+  : [];
 
 // 🔥 2. Ensure unique slug
 let count = 1;
@@ -53,14 +66,17 @@ while (await Question.findOne({ slug })) {
 
     // 🔥 3. Create question
     const newQuestion = new Question({
-      question,
-      slug,
-      answer,
-      hawala1,
-      hawala2,
-      hawala3,
-      category,
-    });
+  question,
+  slug,
+  answer,
+  hawala1,
+  hawala2,
+  hawala3,
+  category,
+  metaTitle: metaTitle || question,
+  metaDescription: metaDescription || answer?.slice(0, 150),
+  keywords: keywordArray,
+});
 
     await newQuestion.save();
 
@@ -133,6 +149,27 @@ exports.updateQuestion = async (req, res) => {
   try {
     const id = req.params.id;
 
+    // ✅ Agar question change hua to slug update karo
+    if (req.body.question) {
+      let baseSlug = createSlug(req.body.question);
+      let slug = baseSlug;
+
+      let count = 1;
+      while (await Question.findOne({ slug, _id: { $ne: id } })) {
+        slug = `${baseSlug}-${count}`;
+        count++;
+      }
+
+      req.body.slug = slug;
+    }
+
+    // ✅ Keywords array me convert karo
+    if (req.body.keywords) {
+      req.body.keywords = req.body.keywords
+        .split(",")
+        .map((k) => k.trim());
+    }
+
     const updated = await Question.findByIdAndUpdate(id, req.body, {
       new: true,
     });
@@ -142,6 +179,7 @@ exports.updateQuestion = async (req, res) => {
       message: "Question updated successfully",
       data: updated,
     });
+
   } catch (err) {
     console.error(err);
     return res.status(500).json({ success: false, message: err.message });
