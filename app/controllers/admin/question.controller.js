@@ -13,14 +13,28 @@ function createSlug(text) {
     ز: "z", ژ: "zh", س: "s", ش: "sh", ص: "s",
     ض: "z", ط: "t", ظ: "z", ع: "a", غ: "gh",
     ف: "f", ق: "q", ک: "k", گ: "g", ل: "l",
-    م: "m", ن: "n", و: "w", ہ: "h", ھ: "h",
-    ء: "", ی: "y", ے: "e"
+    م: "m", ن: "n",
+    و: "o",   // ✅ fix
+    ہ: "h", ھ: "h",
+    ء: "",
+    ی: "ee",  // ✅ fix
+    ے: "e"
   };
 
   let slug = text
     .split("")
     .map(char => urduMap[char] || char)
     .join("");
+
+  return slug
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .split("-")
+    .filter(Boolean)
+    .slice(0, 8) // 🔥 max 8 words
+    .join("-");
+}
 
   return slug
     .toLowerCase()
@@ -50,7 +64,7 @@ exports.createQuestion = async (req, res) => {
 } = req.body;
 
     // 🔥 1. Generate clean slug
-let baseSlug = createSlug(metaTitle || question);
+let baseSlug = frontendSlug || createSlug(metaTitle || question);
 let slug = baseSlug;
 
 const keywordArray = keywords
