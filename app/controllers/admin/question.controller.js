@@ -57,7 +57,7 @@ function createSlug(text) {
     // 🔥 max 5-6 words (SEO sweet spot)
     .split("-")
     .filter(Boolean)
-    .slice(0, 11)
+    .slice(0, 10)
     .join("-");
 }
 // ===========================
