@@ -14,10 +14,10 @@ function createSlug(text) {
     ض: "z", ط: "t", ظ: "z", ع: "a", غ: "gh",
     ف: "f", ق: "q", ک: "k", گ: "g", ل: "l",
     م: "m", ن: "n",
-    و: "o",   // ✅ fix
+    و: "o",
     ہ: "h", ھ: "h",
     ء: "",
-    ی: "ee",  // ✅ fix
+    ی: "i",   // 🔥 change (better than ee)
     ے: "e"
   };
 
@@ -30,9 +30,17 @@ function createSlug(text) {
     .toLowerCase()
     .replace(/[^\w\s-]/g, "")
     .replace(/\s+/g, "-")
+
+    // 🔥 smart fixes
+    .replace(/aa+/g, "a")
+    .replace(/ii+/g, "i")
+    .replace(/ee+/g, "e")
+    .replace(/oo+/g, "o")
+    .replace(/qh/g, "qa")
+
     .split("-")
     .filter(Boolean)
-    .slice(0, 8) // 🔥 max 8 words
+    .slice(0, 6) // 🔥 best SEO length
     .join("-");
 }
 // ===========================
@@ -54,7 +62,7 @@ exports.createQuestion = async (req, res) => {
 } = req.body;
 
     // 🔥 1. Generate clean slug
-let baseSlug = createSlug(metaTitle || question);
+let baseSlug = frontendSlug || createSlug(metaTitle || question);
 let slug = baseSlug;
 
 const keywordArray = keywords
