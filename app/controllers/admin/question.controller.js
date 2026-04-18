@@ -50,7 +50,7 @@ exports.createQuestion = async (req, res) => {
 } = req.body;
 
     // 🔥 1. Generate clean slug
-let baseSlug = frontendSlug || createSlug(question);
+let baseSlug = createSlug(metaTitle || question);
 let slug = baseSlug;
 
 const keywordArray = keywords
