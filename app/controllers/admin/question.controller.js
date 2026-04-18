@@ -57,7 +57,7 @@ function createSlug(text) {
     // 🔥 max 5-6 words (SEO sweet spot)
     .split("-")
     .filter(Boolean)
-    .slice(0, 10)
+    .slice(0, 11)
     .join("-");
 }
 // ===========================
@@ -79,13 +79,7 @@ exports.createQuestion = async (req, res) => {
 } = req.body;
 
     // 🔥 1. Generate clean slug
-let baseSlug;
-
-if (frontendSlug && frontendSlug.trim() !== "") {
-  baseSlug = createSlug(frontendSlug); // manual slug
-} else {
-  baseSlug = createSlug(metaTitle || question); // auto slug
-}
+let baseSlug = createSlug(metaTitle || question);
 let slug = baseSlug;
 
 const keywordArray = keywords
