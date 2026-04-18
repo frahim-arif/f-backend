@@ -35,16 +35,6 @@ function createSlug(text) {
     .slice(0, 8) // 🔥 max 8 words
     .join("-");
 }
-
-  return slug
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .split("-")
-    .filter(Boolean)
-    .slice(0, 12)
-    .join("-");
-}
 // ===========================
 // 📌 Create New Question
 // ===========================
@@ -64,7 +54,7 @@ exports.createQuestion = async (req, res) => {
 } = req.body;
 
     // 🔥 1. Generate clean slug
-let baseSlug = frontendSlug || createSlug(metaTitle || question);
+let baseSlug = createSlug(metaTitle || question);
 let slug = baseSlug;
 
 const keywordArray = keywords
