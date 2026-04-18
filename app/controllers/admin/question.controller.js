@@ -17,7 +17,7 @@ function createSlug(text) {
     و: "o",
     ہ: "h", ھ: "h",
     ء: "",
-    ی: "i",   // 🔥 change (better than ee)
+    ی: "i",
     ے: "e"
   };
 
@@ -28,19 +28,36 @@ function createSlug(text) {
 
   return slug
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
 
-    // 🔥 smart fixes
+    // ❌ remove special chars
+    .replace(/[^\w\s-]/g, "")
+
+    // 🔥 remove useless Urdu/Hindi stop words
+    .replace(/\b(ke|ki|ka|mein|me|aur|hai|tha|thi|se|ko|par|ke-bare-mein)\b/g, "")
+
+    // 🔥 fix repeated letters
     .replace(/aa+/g, "a")
     .replace(/ii+/g, "i")
     .replace(/ee+/g, "e")
     .replace(/oo+/g, "o")
-    .replace(/qh/g, "qa")
 
+    // 🔥 better words fix
+    .replace(/qh/g, "qa")
+    .replace(/janor/g, "janwar")
+    .replace(/bre/g, "bare")
+    .replace(/mi/g, "mein")
+
+    // space → dash
+    .replace(/\s+/g, "-")
+
+    // remove extra dashes
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+
+    // 🔥 max 5-6 words (SEO sweet spot)
     .split("-")
     .filter(Boolean)
-    .slice(0, 6) // 🔥 best SEO length
+    .slice(0, 11)
     .join("-");
 }
 // ===========================
