@@ -11,54 +11,25 @@ function createSlug(text) {
     ث: "s", ج: "j", چ: "ch", ح: "h", خ: "kh",
     د: "d", ڈ: "d", ذ: "z", ر: "r", ڑ: "r",
     ز: "z", ژ: "zh", س: "s", ش: "sh", ص: "s",
-    ض: "z", ط: "t", ظ: "z", ع: "a", غ: "gh",
+    ض: "z", ط: "t", ظ: "z", ع: "", غ: "gh",
     ف: "f", ق: "q", ک: "k", گ: "g", ل: "l",
     م: "m", ن: "n",
-    و: "o",
+    و: "w",
     ہ: "h", ھ: "h",
     ء: "",
-    ی: "i",
+    ی: "y",
     ے: "e"
   };
 
-  let slug = text
+  return text
     .split("")
-    .map(char => urduMap[char] || char)
-    .join("");
-
-  return slug
+    .map(char => urduMap[char] ?? char)
+    .join("")
     .toLowerCase()
-
-    // ❌ remove special chars
-    .replace(/[^\w\s-]/g, "")
-
-    // 🔥 remove useless Urdu/Hindi stop words
-    .replace(/\b(ke|ki|ka|mein|me|aur|hai|tha|thi|se|ko|par|ke-bare-mein)\b/g, "")
-
-    // 🔥 fix repeated letters
-    .replace(/aa+/g, "a")
-    .replace(/ii+/g, "i")
-    .replace(/ee+/g, "e")
-    .replace(/oo+/g, "o")
-
-    // 🔥 better words fix
-    .replace(/qh/g, "qa")
-    .replace(/janor/g, "janwar")
-    .replace(/bre/g, "bare")
-    .replace(/mi/g, "mein")
-
-    // space → dash
+    .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
-
-    // remove extra dashes
     .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-
-    // 🔥 max 5-6 words (SEO sweet spot)
-    .split("-")
-    .filter(Boolean)
-    .slice(0, 10)
-    .join("-");
+    .replace(/^-|-$/g, "");
 }
 // ===========================
 // 📌 Create New Question
