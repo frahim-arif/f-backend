@@ -57,6 +57,7 @@ function createSlug(text) {
     .slice(0, 6)
     .join("-");
 }
+
 // ===========================
 // 📌 Create New Question
 // ===========================
