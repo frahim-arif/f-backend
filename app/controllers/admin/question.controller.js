@@ -21,30 +21,35 @@ function createSlug(text) {
     ے: "e"
   };
 
-  let slug = text
+  return text
+    // 1️⃣ transliterate ALL characters
     .split("")
     .map(c => urduMap[c] ?? c)
     .join("")
+
+    // 2️⃣ lowercase
     .toLowerCase()
 
-    // clean only (NO smart replacements)
+    // 3️⃣ remove unwanted chars
     .replace(/[^a-z0-9\s]/g, " ")
 
-    // normalize spaces
+    // 4️⃣ normalize spaces
     .replace(/\s+/g, " ")
     .trim()
 
-    // split FIRST (important fix)
+    // 5️⃣ split words
     .split(" ")
     .filter(Boolean)
-    .slice(0, 8)   // 🔥 safe SEO limit
+
+    // 6️⃣ limit words (SEO safe)
+    .slice(0, 8)
+
+    // 7️⃣ join slug
     .join("-")
 
-    // final cleanup
+    // 8️⃣ final cleanup
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
-
-  return slug || "no-slug";
 }
 // ===========================
 // 📌 Create New Question
