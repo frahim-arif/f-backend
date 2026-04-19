@@ -6,57 +6,54 @@ function normalizeRoman(text = "") {
   return text
     .toLowerCase()
 
-    // common Roman fixes
-    .replace(/\b(my|mi|me|mai)\b/g, "mein")
-    .replace(/\b(awr|or|ur|aurh)\b/g, "aur")
+    // 🔥 FIRST: strongest replacements (VERY IMPORTANT ORDER)
+    .replace(/\b(qyqh|aqiqh|aqeeqah)\b/g, "aqeeqah")
+    .replace(/\b(rwayat)\b/g, "riwayat")
+    .replace(/\b(swal|sawaal)\b/g, "sawal")
+    .replace(/\b(be\s?shmar|beshumar)\b/g, "be shumar")
+
+    // roman fixes (expanded + safe)
+    .replace(/\b(my|mi|me|mai|m)\b/g, "mein")
+    .replace(/\b(awr|aurh|or|ur)\b/g, "aur")
     .replace(/\b(ky|k|ke|ki|kay)\b/g, "ke")
     .replace(/\b(phr|fir|phir)\b/g, "phir")
 
-    // common Urdu Islamic SEO fixes
-    .replace(/\bswal\b/g, "sawal")
-    .replace(/\brwayat\b/g, "riwayat")
-    .replace(/\bqyh|qyqh|aqiqh|aqeeqah\b/g, "aqeeqah")
-    .replace(/\bbe\s?shmar\b/g, "be-shumar")
-
-    // noise cleanup
+    // remove double letters noise
     .replace(/([a-z])\1+/g, "$1")
+
+    // cleanup
     .replace(/\s+/g, " ")
     .trim();
 }
-
-function createSlug(text) {
+function createSlug(text = "") {
   if (!text) return "no-slug";
 
+  const cleanText = normalizeRoman(text);
+
   const urduMap = {
-    ا: "a", آ: "a", ب: "b", پ: "p", ت: "t", ٹ: "t",
-    ث: "s", ج: "j", چ: "ch", ح: "h", خ: "kh",
-    د: "d", ڈ: "d", ذ: "z", ر: "r", ڑ: "r",
-    ز: "z", ژ: "zh", س: "s", ش: "sh", ص: "s",
-    ض: "z", ط: "t", ظ: "z", ع: "", غ: "gh",
-    ف: "f", ق: "q", ک: "k", گ: "g", ل: "l",
-    م: "m", ن: "n",
-    و: "w",
-    ہ: "h", ھ: "h",
-    ء: "",
-    ی: "y",
-    ے: "e"
+    ا:"a", آ:"a", ب:"b", پ:"p", ت:"t", ٹ:"t",
+    ث:"s", ج:"j", چ:"ch", ح:"h", خ:"kh",
+    د:"d", ڈ:"d", ذ:"z", ر:"r", ڑ:"r",
+    ز:"z", ژ:"zh", س:"s", ش:"sh", ص:"s",
+    ض:"z", ط:"t", ظ:"z", ع:"", غ:"gh",
+    ف:"f", ق:"q", ک:"k", گ:"g", ل:"l",
+    م:"m", ن:"n",
+    و:"w",
+    ہ:"h", ھ:"h",
+    ی:"y", ے:"e", ء:""
   };
 
-  let cleanText = normalizeRoman(text);
-
   return cleanText
-    // Urdu → Roman transliteration (if Urdu comes)
     .split("")
     .map(c => urduMap[c] ?? c)
     .join("")
-
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim()
     .split(" ")
     .filter(Boolean)
-    .slice(0, 8)
+    .slice(0, 10)
     .join("-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
@@ -81,8 +78,12 @@ exports.createQuestion = async (req, res) => {
 
 // 🔥 1. Generate clean slug
 let rawText = metaTitle || question;
-let cleanText = normalizeRoman(rawText);
-let baseSlug = createSlug(cleanText);
+
+// STEP 1: normalize FIRST
+let normalized = normalizeRoman(rawText);
+
+// STEP 2: slug generate AFTER normalization
+let baseSlug = createSlug(normalized);
 let slug = baseSlug;
 
 const keywordArray = keywords
