@@ -42,10 +42,13 @@ function createSlug(text) {
     .replace(/oo+/g, "o")
 
     // 🔥 better words fix
-    .replace(/qh/g, "qa")
-    .replace(/janor/g, "janwar")
-    .replace(/bre/g, "bare")
-    .replace(/mi/g, "mein")
+   // 🔥 FINAL SAFETY CLEAN
+.replace(/\b(my|mi|me)\b/g, "mein")
+.replace(/\b(ky|k)\b/g, "ke")
+.replace(/\b(awr|or|ur)\b/g, "aur")
+.replace(/\b(qyqh|aqiqh|aqeeqah)\b/g, "aqeeqah")
+.replace(/\b(rwayat)\b/g, "riwayat")
+.replace(/\b(swal)\b/g, "sawal")
 
     // space → dash
     .replace(/\s+/g, "-")
