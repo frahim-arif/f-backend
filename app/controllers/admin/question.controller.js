@@ -32,11 +32,10 @@ function createSlug(text) {
   };
 
   let slug = text
-    .split("")
-    .map(c => urduMap[c] || c)
-    .join("")
+  .split(" ")
+  .map(word => urduMap[word] || word)
+  .join(" ")
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
     .replace(/\s+/g, " ")
     .trim();
 
