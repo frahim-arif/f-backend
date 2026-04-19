@@ -21,7 +21,6 @@ function createSlug(text) {
     mi: "mein",
     me: "mein",
     ky: "ke",
-    k: "ke",
     awr: "aur",
     or: "aur",
     ur: "aur",
@@ -41,18 +40,22 @@ function createSlug(text) {
     .replace(/\s+/g, " ")
     .trim();
 
-  // 🔥 NORMALIZATION STEP (RIGHT PLACE)
-  slug = slug.replace(/\b\w+\b/g, (word) => {
-    return normalizeMap[word] || word;
-  });
+  // normalize words
+  slug = slug.replace(/\b\w+\b/g, (word) => normalizeMap[word] || word);
 
+  // remove stop words early
   slug = slug
     .replace(/\b(ke|ki|ka|mein|se|ko|par)\b/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
 
-  return slug.split("-").slice(0, 6).join("-");
+  // final cleanup
+  return slug
+    .split("-")
+    .filter(w => w.length > 1)
+    .slice(0, 6)
+    .join("-");
 }
 // ===========================
 // 📌 Create New Question
