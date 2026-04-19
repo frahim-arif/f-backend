@@ -2,61 +2,67 @@ const Question = require("../../models/question.model");
 const fetch = require("node-fetch"); // ✅ required if Node < 18
 
 // ===========================
+// 🔥 Slug Generator Function
 function createSlug(text) {
   if (!text) return "no-slug";
 
   const urduMap = {
-    ا:"a", آ:"aa", ب:"b", پ:"p", ت:"t", ٹ:"t",
-    ث:"s", ج:"j", چ:"ch", ح:"h", خ:"kh",
-    د:"d", ڈ:"d", ذ:"z", ر:"r", ڑ:"r",
-    ز:"z", ژ:"zh", س:"s", ش:"sh", ص:"s",
-    ض:"z", ط:"t", ظ:"z", ع:"a", غ:"gh",
-    ف:"f", ق:"q", ک:"k", گ:"g", ل:"l",
-    م:"m", ن:"n", و:"o", ہ:"h", ھ:"h",
-    ء:"", ی:"i", ے:"e"
-  };
-
-  const normalizeMap = {
-    my: "mein",
-    mi: "mein",
-    me: "mein",
-    ky: "ke",
-    awr: "aur",
-    or: "aur",
-    ur: "aur",
-    qyqh: "aqeeqah",
-    aqiqh: "aqeeqah",
-    aqeeqah: "aqeeqah",
-    rwayat: "riwayat",
-    swal: "sawal"
+    ا: "a", آ: "aa", ب: "b", پ: "p", ت: "t", ٹ: "t",
+    ث: "s", ج: "j", چ: "ch", ح: "h", خ: "kh",
+    د: "d", ڈ: "d", ذ: "z", ر: "r", ڑ: "r",
+    ز: "z", ژ: "zh", س: "s", ش: "sh", ص: "s",
+    ض: "z", ط: "t", ظ: "z", ع: "a", غ: "gh",
+    ف: "f", ق: "q", ک: "k", گ: "g", ل: "l",
+    م: "m", ن: "n",
+    و: "o",
+    ہ: "h", ھ: "h",
+    ء: "",
+    ی: "i",
+    ے: "e"
   };
 
   let slug = text
-  .split(" ")
-  .map(word => urduMap[word] || word)
-  .join(" ")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
+    .split("")
+    .map(char => urduMap[char] || char)
+    .join("");
 
-  // normalize words
-  slug = slug.replace(/\b\w+\b/g, (word) => normalizeMap[word] || word);
-
-  // remove stop words early
-  slug = slug
-    .replace(/\b(ke|ki|ka|mein|se|ko|par)\b/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-
-  // final cleanup
   return slug
+    .toLowerCase()
+
+    // ❌ remove special chars
+    .replace(/[^\w\s-]/g, "")
+
+    // 🔥 remove useless Urdu/Hindi stop words
+    .replace(/\b(ke|ki|ka|mein|me|aur|hai|tha|thi|se|ko|par|ke-bare-mein)\b/g, "")
+
+    // 🔥 fix repeated letters
+    .replace(/aa+/g, "a")
+    .replace(/ii+/g, "i")
+    .replace(/ee+/g, "e")
+    .replace(/oo+/g, "o")
+
+    // 🔥 better words fix
+   // 🔥 FINAL SAFETY CLEAN
+.replace(/\b(my|mi|me)\b/g, "mein")
+.replace(/\b(ky|k)\b/g, "ke")
+.replace(/\b(awr|or|ur)\b/g, "aur")
+.replace(/\b(qyqh|aqiqh|aqeeqah)\b/g, "aqeeqah")
+.replace(/\b(rwayat)\b/g, "riwayat")
+.replace(/\b(swal)\b/g, "sawal")
+
+    // space → dash
+    .replace(/\s+/g, "-")
+
+    // remove extra dashes
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+
+    // 🔥 max 5-6 words (SEO sweet spot)
     .split("-")
-    .filter(w => w.length > 1)
-    .slice(0, 8)
+    .filter(Boolean)
+    .slice(0, )
     .join("-");
 }
-
 // ===========================
 // 📌 Create New Question
 // ===========================
