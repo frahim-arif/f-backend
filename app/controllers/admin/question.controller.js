@@ -22,12 +22,26 @@ function createSlug(text) {
   };
 
   return text
+    // 1️⃣ transliteration
     .split("")
-    .map(char => urduMap[char] ?? char)
+    .map(c => urduMap[c] ?? c)
     .join("")
     .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
+
+    // 2️⃣ clean characters
+    .replace(/[^\w\s-]/g, "")
+
+    // 3️⃣ normalize spaces FIRST
+    .replace(/\s+/g, " ")
+    .trim()
+
+    // 4️⃣ word limit FIRST (important fix)
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 10)
+    .join("-")
+
+    // 5️⃣ final cleanup
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
 }
