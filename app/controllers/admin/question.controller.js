@@ -2,61 +2,63 @@ const Question = require("../../models/question.model");
 const fetch = require("node-fetch"); // ✅ required if Node < 18
 
 // ===========================
-function normalizeRoman(text = "") {
-  return text
-    .toLowerCase()
-
-    // 🔥 FIRST: strongest replacements (VERY IMPORTANT ORDER)
-    .replace(/\b(qyqh|aqiqh|aqeeqah)\b/g, "aqeeqah")
-    .replace(/\b(rwayat)\b/g, "riwayat")
-    .replace(/\b(swal|sawaal)\b/g, "sawal")
-    .replace(/\b(be\s?shmar|beshumar)\b/g, "be shumar")
-
-    // roman fixes (expanded + safe)
-    .replace(/\b(my|mi|me|mai|m)\b/g, "mein")
-    .replace(/\b(awr|aurh|or|ur)\b/g, "aur")
-    .replace(/\b(ky|k|ke|ki|kay)\b/g, "ke")
-    .replace(/\b(phr|fir|phir)\b/g, "phir")
-
-    // remove double letters noise
-    .replace(/([a-z])\1+/g, "$1")
-
-    // cleanup
-    .replace(/\s+/g, " ")
-    .trim();
-}
-function createSlug(text = "") {
+// 🔥 Slug Generator Function
+function createSlug(text) {
   if (!text) return "no-slug";
 
-  const cleanText = normalizeRoman(text);
-
   const urduMap = {
-    ا:"a", آ:"a", ب:"b", پ:"p", ت:"t", ٹ:"t",
-    ث:"s", ج:"j", چ:"ch", ح:"h", خ:"kh",
-    د:"d", ڈ:"d", ذ:"z", ر:"r", ڑ:"r",
-    ز:"z", ژ:"zh", س:"s", ش:"sh", ص:"s",
-    ض:"z", ط:"t", ظ:"z", ع:"", غ:"gh",
-    ف:"f", ق:"q", ک:"k", گ:"g", ل:"l",
-    م:"m", ن:"n",
-    و:"w",
-    ہ:"h", ھ:"h",
-    ی:"y", ے:"e", ء:""
+    ا: "a", آ: "aa", ب: "b", پ: "p", ت: "t", ٹ: "t",
+    ث: "s", ج: "j", چ: "ch", ح: "h", خ: "kh",
+    د: "d", ڈ: "d", ذ: "z", ر: "r", ڑ: "r",
+    ز: "z", ژ: "zh", س: "s", ش: "sh", ص: "s",
+    ض: "z", ط: "t", ظ: "z", ع: "a", غ: "gh",
+    ف: "f", ق: "q", ک: "k", گ: "g", ل: "l",
+    م: "m", ن: "n",
+    و: "o",
+    ہ: "h", ھ: "h",
+    ء: "",
+    ی: "i",
+    ے: "e"
   };
 
-  return cleanText
+  let slug = text
     .split("")
-    .map(c => urduMap[c] ?? c)
-    .join("")
+    .map(char => urduMap[char] || char)
+    .join("");
+
+  return slug
     .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 10)
-    .join("-")
+
+    // ❌ remove special chars
+    .replace(/[^\w\s-]/g, "")
+
+    // 🔥 remove useless Urdu/Hindi stop words
+    .replace(/\b(ke|ki|ka|mein|me|aur|hai|tha|thi|se|ko|par|ke-bare-mein)\b/g, "")
+
+    // 🔥 fix repeated letters
+    .replace(/aa+/g, "a")
+    .replace(/ii+/g, "i")
+    .replace(/ee+/g, "e")
+    .replace(/oo+/g, "o")
+
+    // 🔥 better words fix
+    .replace(/qh/g, "qa")
+    .replace(/janor/g, "janwar")
+    .replace(/bre/g, "bare")
+    .replace(/mi/g, "mein")
+
+    // space → dash
+    .replace(/\s+/g, "-")
+
+    // remove extra dashes
     .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+    .replace(/^-|-$/g, "")
+
+    // 🔥 max 5-6 words (SEO sweet spot)
+    .split("-")
+    .filter(Boolean)
+    .slice(0, 5)
+    .join("-");
 }
 // ===========================
 // 📌 Create New Question
@@ -76,12 +78,9 @@ exports.createQuestion = async (req, res) => {
   slug: frontendSlug
 } = req.body;
 
-// 🔥 1. Generate clean slug
-let rawText = metaTitle || question;
-
-// 🔥 MUST normalize BEFORE slug
-let baseSlug = createSlug(rawText);
-let slug = baseSlug;;
+    // 🔥 1. Generate clean slug
+let baseSlug = createSlug(metaTitle || question);
+let slug = baseSlug;
 
 const keywordArray = keywords
   ? keywords.split(",").map(k => k.trim())
