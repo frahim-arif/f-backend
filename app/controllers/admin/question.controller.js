@@ -79,12 +79,9 @@ exports.createQuestion = async (req, res) => {
 // 🔥 1. Generate clean slug
 let rawText = metaTitle || question;
 
-// STEP 1: normalize FIRST
-let normalized = normalizeRoman(rawText);
-
-// STEP 2: slug generate AFTER normalization
-let baseSlug = createSlug(normalized);
-let slug = baseSlug;
+// 🔥 MUST normalize BEFORE slug
+let baseSlug = createSlug(rawText);
+let slug = baseSlug;;
 
 const keywordArray = keywords
   ? keywords.split(",").map(k => k.trim())
