@@ -2,14 +2,24 @@ const Question = require("../../models/question.model");
 const fetch = require("node-fetch"); // ✅ required if Node < 18
 
 // ===========================
-// 🔥 Slug Generator Function
 function normalizeRoman(text = "") {
   return text
     .toLowerCase()
-    .replace(/\b(my|mi|me)\b/g, "mein")
-    .replace(/\b(awr|or|ur)\b/g, "aur")
-    .replace(/\b(ky|k)\b/g, "ke")
-    .replace(/\b(phr|fir)\b/g, "phir")
+
+    // common Roman fixes
+    .replace(/\b(my|mi|me|mai)\b/g, "mein")
+    .replace(/\b(awr|or|ur|aurh)\b/g, "aur")
+    .replace(/\b(ky|k|ke|ki|kay)\b/g, "ke")
+    .replace(/\b(phr|fir|phir)\b/g, "phir")
+
+    // common Urdu Islamic SEO fixes
+    .replace(/\bswal\b/g, "sawal")
+    .replace(/\brwayat\b/g, "riwayat")
+    .replace(/\bqyh|qyqh|aqiqh|aqeeqah\b/g, "aqeeqah")
+    .replace(/\bbe\s?shmar\b/g, "be-shumar")
+
+    // noise cleanup
+    .replace(/([a-z])\1+/g, "$1")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -35,30 +45,19 @@ function createSlug(text) {
   let cleanText = normalizeRoman(text);
 
   return cleanText
-    // transliterate Urdu → roman
+    // Urdu → Roman transliteration (if Urdu comes)
     .split("")
     .map(c => urduMap[c] ?? c)
     .join("")
 
-    // lowercase
     .toLowerCase()
-
-    // keep only safe chars
     .replace(/[^a-z0-9\s]/g, " ")
-
-    // normalize spaces
     .replace(/\s+/g, " ")
     .trim()
-
-    // words limit (SEO safe)
     .split(" ")
     .filter(Boolean)
     .slice(0, 8)
-
-    // slug join
     .join("-")
-
-    // final cleanup
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
 }
