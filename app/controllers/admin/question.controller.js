@@ -53,7 +53,7 @@ function createSlug(text) {
   return slug
     .split("-")
     .filter(w => w.length > 1)
-    .slice(0, 6)
+    .slice(0, 8)
     .join("-");
 }
 
