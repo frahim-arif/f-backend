@@ -7,7 +7,7 @@ function createSlug(text) {
   if (!text) return "no-slug";
 
   const urduMap = {
-    ا: "a", آ: "aa", ب: "b", پ: "p", ت: "t", ٹ: "t",
+    ا: "a", آ: "a", ب: "b", پ: "p", ت: "t", ٹ: "t",
     ث: "s", ج: "j", چ: "ch", ح: "h", خ: "kh",
     د: "d", ڈ: "d", ذ: "z", ر: "r", ڑ: "r",
     ز: "z", ژ: "zh", س: "s", ش: "sh", ص: "s",
@@ -22,7 +22,7 @@ function createSlug(text) {
   };
 
   return text
-    // 1️⃣ transliterate ALL characters
+    // 1️⃣ transliterate only
     .split("")
     .map(c => urduMap[c] ?? c)
     .join("")
@@ -30,8 +30,8 @@ function createSlug(text) {
     // 2️⃣ lowercase
     .toLowerCase()
 
-    // 3️⃣ remove unwanted chars
-    .replace(/[^a-z0-9\s]/g, " ")
+    // 3️⃣ keep only safe chars
+    .replace(/[^a-z0-9\s]/g, "")
 
     // 4️⃣ normalize spaces
     .replace(/\s+/g, " ")
@@ -41,88 +41,16 @@ function createSlug(text) {
     .split(" ")
     .filter(Boolean)
 
-    // 6️⃣ limit words (SEO safe)
+    // 6️⃣ limit words (Banuri-style short URL)
     .slice(0, 8)
 
-    // 7️⃣ join slug
+    // 7️⃣ join with dash
     .join("-")
 
     // 8️⃣ final cleanup
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
 }
-// ===========================
-// 📌 Create New Question
-// ===========================
-exports.createQuestion = async (req, res) => {
-  try {
-    const {
-  question,
-  answer,
-  hawala1,
-  hawala2,
-  hawala3,
-  category,
-  metaTitle,
-  metaDescription,
-  keywords,
-  slug: frontendSlug
-} = req.body;
-
-    // 🔥 1. Generate clean slug
-let baseSlug = createSlug(metaTitle || question);
-let slug = baseSlug;
-
-const keywordArray = keywords
-  ? keywords.split(",").map(k => k.trim())
-  : [];
-
-// 🔥 2. Ensure unique slug
-let count = 1;
-while (await Question.findOne({ slug })) {
-  slug = `${baseSlug}-${count}`;
-  count++;
-}
-
-    // 🔥 3. Create question
-    const newQuestion = new Question({
-  question,
-  slug,
-  answer,
-  hawala1,
-  hawala2,
-  hawala3,
-  category,
-  metaTitle: metaTitle || question,
-  metaDescription: metaDescription || answer?.slice(0, 150),
-  keywords: keywordArray,
-});
-
-    await newQuestion.save();
-
-    // 🔥 4. Google Sitemap Ping
-    try {
-      await fetch(
-        "https://www.google.com/ping?sitemap=https://www.maslakedeoband.in/sitemap.xml"
-      );
-      console.log("✅ Google ping sent");
-    } catch (err) {
-      console.log("⚠️ Ping failed (ignore):", err.message);
-    }
-
-    return res.json({
-      success: true,
-      message: "Question added successfully",
-      data: newQuestion,
-    });
-  } catch (err) {
-    console.error("❌ ERROR:", err);
-    return res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
-};
 
 // ===========================
 // 📌 Get All Questions
