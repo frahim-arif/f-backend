@@ -3,6 +3,17 @@ const fetch = require("node-fetch"); // ✅ required if Node < 18
 
 // ===========================
 // 🔥 Slug Generator Function
+function normalizeRoman(text = "") {
+  return text
+    .toLowerCase()
+    .replace(/\b(my|mi|me)\b/g, "mein")
+    .replace(/\b(awr|or|ur)\b/g, "aur")
+    .replace(/\b(ky|k)\b/g, "ke")
+    .replace(/\b(phr|fir)\b/g, "phir")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function createSlug(text) {
   if (!text) return "no-slug";
 
@@ -21,36 +32,108 @@ function createSlug(text) {
     ے: "e"
   };
 
-  return text
-    // 1️⃣ transliterate only
+  let cleanText = normalizeRoman(text);
+
+  return cleanText
+    // transliterate Urdu → roman
     .split("")
     .map(c => urduMap[c] ?? c)
     .join("")
 
-    // 2️⃣ lowercase
+    // lowercase
     .toLowerCase()
 
-    // 3️⃣ keep only safe chars
-    .replace(/[^a-z0-9\s]/g, "")
+    // keep only safe chars
+    .replace(/[^a-z0-9\s]/g, " ")
 
-    // 4️⃣ normalize spaces
+    // normalize spaces
     .replace(/\s+/g, " ")
     .trim()
 
-    // 5️⃣ split words
+    // words limit (SEO safe)
     .split(" ")
     .filter(Boolean)
-
-    // 6️⃣ limit words (Banuri-style short URL)
     .slice(0, 8)
 
-    // 7️⃣ join with dash
+    // slug join
     .join("-")
 
-    // 8️⃣ final cleanup
+    // final cleanup
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
 }
+// ===========================
+// 📌 Create New Question
+// ===========================
+exports.createQuestion = async (req, res) => {
+  try {
+    const {
+  question,
+  answer,
+  hawala1,
+  hawala2,
+  hawala3,
+  category,
+  metaTitle,
+  metaDescription,
+  keywords,
+  slug: frontendSlug
+} = req.body;
+
+    // 🔥 1. Generate clean slug
+let baseSlug = createSlug(metaTitle || question);
+let slug = baseSlug;
+
+const keywordArray = keywords
+  ? keywords.split(",").map(k => k.trim())
+  : [];
+
+// 🔥 2. Ensure unique slug
+let count = 1;
+while (await Question.findOne({ slug })) {
+  slug = `${baseSlug}-${count}`;
+  count++;
+}
+
+    // 🔥 3. Create question
+    const newQuestion = new Question({
+  question,
+  slug,
+  answer,
+  hawala1,
+  hawala2,
+  hawala3,
+  category,
+  metaTitle: metaTitle || question,
+  metaDescription: metaDescription || answer?.slice(0, 150),
+  keywords: keywordArray,
+});
+
+    await newQuestion.save();
+
+    // 🔥 4. Google Sitemap Ping
+    try {
+      await fetch(
+        "https://www.google.com/ping?sitemap=https://www.maslakedeoband.in/sitemap.xml"
+      );
+      console.log("✅ Google ping sent");
+    } catch (err) {
+      console.log("⚠️ Ping failed (ignore):", err.message);
+    }
+
+    return res.json({
+      success: true,
+      message: "Question added successfully",
+      data: newQuestion,
+    });
+  } catch (err) {
+    console.error("❌ ERROR:", err);
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
 
 // ===========================
 // 📌 Get All Questions
