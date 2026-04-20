@@ -1,6 +1,10 @@
 const Question = require("../../models/question.model");
 const fetch = require("node-fetch"); // ✅ required if Node < 18
 
+function generateShortId() {
+  return Date.now().toString().slice(-6);
+}
+
 // ===========================
 function createSlug(text) {
   if (!text) return "no-slug";
@@ -90,7 +94,18 @@ exports.createQuestion = async (req, res) => {
 
     // 🔥 1. Generate clean slug
 let baseSlug = createSlug(metaTitle || question);
-let slug = baseSlug;
+
+// 🔥 unique slug generate
+let finalSlug = "";
+let exists = true;
+
+while (exists) {
+  const shortId = generateShortId();
+  finalSlug = `${baseSlug}-${shortId}`;
+
+  const found = await Question.findOne({ slug: finalSlug });
+  exists = !!found;
+}
 
 const keywordArray = keywords
   ? keywords.split(",").map(k => k.trim())
