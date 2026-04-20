@@ -1,9 +1,6 @@
 const Question = require("../../models/question.model");
 const fetch = require("node-fetch"); // ✅ required if Node < 18
 
-function generateShortId() {
-  return Date.now().toString().slice(-6);
-}
 
 // ===========================
 function createSlug(text) {
@@ -92,35 +89,12 @@ exports.createQuestion = async (req, res) => {
   slug: frontendSlug
 } = req.body;
 
-   
-// 🔥 1. Generate base slug
+    // 🔥 1. Generate clean slug
 let baseSlug = createSlug(metaTitle || question);
+let slug = baseSlug;
 
-if (!baseSlug) baseSlug = "question";
-
-// 🔥 short ID generator
-function generateShortId() {
-  return (
-    Date.now().toString().slice(-4) +
-    Math.floor(Math.random() * 100)
-  );
-}
-
-// 🔥 2. Unique slug generate
-let finalSlug = "";
-let exists = true;
-
-while (exists) {
-  const shortId = generateShortId();
-  finalSlug = `${baseSlug}-${shortId}`;
-
-  const found = await Question.findOne({ slug: finalSlug });
-  exists = !!found;
-}
-
-// 🔥 3. Keywords array
 const keywordArray = keywords
-  ? keywords.split(",").map(k => k.trim()).filter(Boolean)
+  ? keywords.split(",").map(k => k.trim())
   : [];
 
 // 🔥 2. Ensure unique slug
@@ -131,9 +105,9 @@ while (await Question.findOne({ slug })) {
 }
 
     // 🔥 3. Create question
-  const newQuestion = new Question({
+    const newQuestion = new Question({
   question,
-  slug: finalSlug, // 🔥 IMPORTANT
+  slug,
   answer,
   hawala1,
   hawala2,
