@@ -1,13 +1,33 @@
 const Question = require("../../models/question.model");
 const fetch = require("node-fetch"); // ✅ required if Node < 18
+const corrections = {
+  // basic
+  soal: "sawal",
+  swal: "sawal",
 
+  aqeqah: "aqeeqah",
+  aqiqah: "aqeeqah",
 
-// ===========================
+  roaiat: "riwayat",
+  rwayat: "riwayat",
+
+  shmar: "shumar",
+
+  janor: "janwar",
+
+  // tumhare naye words
+  chlne: "chalne",
+  phrne: "phirne",
+  sholt: "sahulat",
+  lie: "liye",
+  shrai: "shar-i",
+  msjd: "masjid"
+};
 function createSlug(text) {
   if (!text) return "no-slug";
 
-  const urduMap = {
-    ا: "a", آ: "aa", ب: "b", پ: "p", ت: "t", ٹ: "t",
+  const urduMap = { 
+     ا: "a", آ: "aa", ب: "b", پ: "p", ت: "t", ٹ: "t",
     ث: "s", ج: "j", چ: "ch", ح: "h", خ: "kh",
     د: "d", ڈ: "d", ذ: "z", ر: "r", ڑ: "r",
     ز: "z", ژ: "zh", س: "s", ش: "sh", ص: "s",
@@ -19,7 +39,7 @@ function createSlug(text) {
     ء: "",
     ی: "i",
     ے: "e"
-  };
+   };
 
   let slug = text
     .split("")
@@ -28,49 +48,32 @@ function createSlug(text) {
 
   slug = slug
     .toLowerCase()
+    .replace(/[^\w\s-]/g, "");
 
-    // ❌ remove special chars
-    .replace(/[^\w\s-]/g, "")
+  // ✅ dictionary apply
+  Object.keys(corrections).forEach(word => {
+  slug = slug.replace(
+    new RegExp(`\\b${word}\\b`, "gi"),
+    corrections[word]
+  );
+});
 
-    // 🔥 normalize words (Banuri style - strong version)
-.replace(/\b(my|mi|me)\b/g, "mein")
-.replace(/\b(ky|k)\b/g, "ke")
-.replace(/\b(awr|or|ur)\b/g, "aur")
-
-// 🔥 common Islamic / Urdu corrections
-.replace(/\b(swal|soal|sawal)\b/g, "sawal")
-.replace(/\b(aqeqah|aqiqah|aqeeqah|aqiqh|qyqh)\b/g, "aqeeqah")
-.replace(/\b(rwayat|riwayt|roaiat|rawayat)\b/g, "riwayat")
-.replace(/\b(shmar|shumar|shumaar)\b/g, "shumar")
-.replace(/\b(janor|janwar|janvar)\b/g, "janwar")
-
-// 🔥 common words fix
-.replace(/\b(mutaaliq|mutaliq|mutalliq)\b/g, "mutaliq")
-.replace(/\b(shari|sharai|sharayi)\b/g, "shar-i")
-
-    // 🔥 IMPORTANT: stopwords REMOVE nahi — keep "ke", "aur", "ka"
-    // Banuri style me yeh rehte hain
-
-    // 🔥 fix repeated letters
+  slug = slug
     .replace(/aa+/g, "a")
     .replace(/ii+/g, "i")
     .replace(/ee+/g, "e")
     .replace(/oo+/g, "o")
-
-    // space → dash
     .replace(/\s+/g, "-")
-
-    // remove extra dashes
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
 
-  // 🔥 limit words (8-10 for SEO like Banuri)
   return slug
     .split("-")
     .filter(Boolean)
     .slice(0, 11)
     .join("-");
 }
+
 // ===========================
 // 📌 Create New Question
 // ===========================
