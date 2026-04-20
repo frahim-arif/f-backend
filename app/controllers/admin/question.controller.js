@@ -2,7 +2,6 @@ const Question = require("../../models/question.model");
 const fetch = require("node-fetch"); // ✅ required if Node < 18
 
 // ===========================
-// 🔥 Slug Generator Function
 function createSlug(text) {
   if (!text) return "no-slug";
 
@@ -26,14 +25,22 @@ function createSlug(text) {
     .map(char => urduMap[char] || char)
     .join("");
 
-  return slug
+  slug = slug
     .toLowerCase()
 
     // ❌ remove special chars
     .replace(/[^\w\s-]/g, "")
 
-    // 🔥 remove useless Urdu/Hindi stop words
-    .replace(/\b(ke|ki|ka|mein|me|aur|hai|tha|thi|se|ko|par|ke-bare-mein)\b/g, "")
+    // 🔥 normalize words (Banuri style)
+    .replace(/\b(my|mi|me)\b/g, "mein")
+    .replace(/\b(ky|k)\b/g, "ke")
+    .replace(/\b(awr|or|ur)\b/g, "aur")
+    .replace(/\b(qyqh|aqiqh|aqeeqah)\b/g, "aqeeqah")
+    .replace(/\b(rwayat)\b/g, "riwayat")
+    .replace(/\b(swal)\b/g, "sawal")
+
+    // 🔥 IMPORTANT: stopwords REMOVE nahi — keep "ke", "aur", "ka"
+    // Banuri style me yeh rehte hain
 
     // 🔥 fix repeated letters
     .replace(/aa+/g, "a")
@@ -41,26 +48,18 @@ function createSlug(text) {
     .replace(/ee+/g, "e")
     .replace(/oo+/g, "o")
 
-    // 🔥 better words fix
-   // 🔥 FINAL SAFETY CLEAN
-.replace(/\b(my|mi|me)\b/g, "mein")
-.replace(/\b(ky|k)\b/g, "ke")
-.replace(/\b(awr|or|ur)\b/g, "aur")
-.replace(/\b(qyqh|aqiqh|aqeeqah)\b/g, "aqeeqah")
-.replace(/\b(rwayat)\b/g, "riwayat")
-.replace(/\b(swal)\b/g, "sawal")
-
     // space → dash
     .replace(/\s+/g, "-")
 
     // remove extra dashes
     .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
+    .replace(/^-|-$/g, "");
 
-    // 🔥 max 5-6 words (SEO sweet spot)
+  // 🔥 limit words (8-10 for SEO like Banuri)
+  return slug
     .split("-")
     .filter(Boolean)
-    .slice(0, )
+    .slice(0, 10)
     .join("-");
 }
 // ===========================
