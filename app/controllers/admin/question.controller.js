@@ -25,6 +25,7 @@ const corrections = {
   qnot: "qunoot",
   jgh: "jagah",
   prh: "parh",
+  da: "dua",
   lia: "liya",
   phr: "phir",
   iad: "yaad",
