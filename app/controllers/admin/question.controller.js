@@ -31,6 +31,14 @@ const corrections = {
   iad: "yaad",
   aia: "aaya",
   althiat: "tahiyyat",
+  mi: "mein",
+  chtai: "chatai",
+  aor: "aur",
+  qalin: "qaleen",
+  zrort: "zarurat",
+  zad: "ziyada",
+  he: "hai",
+  kia: "kya",
 };
 
 function createSlug(text) {
