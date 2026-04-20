@@ -61,12 +61,12 @@ function createSlug(text) {
     .replace(/[^\w\s-]/g, "");
 
   // ✅ dictionary apply
-  Object.keys(corrections).forEach(word => {
-    slug = slug.replace(
-      new RegExp(`\\b${word}\\b`, "gi"),
-      corrections[word]
-    );
-  });
+ Object.keys(corrections).forEach(word => {
+  slug = slug.replace(
+    new RegExp(`(^|-)${word}(?=-|$)`, "gi"),
+    `$1${corrections[word]}`
+  );
+});
 
   slug = slug
     .replace(/aa+/g, "a")
