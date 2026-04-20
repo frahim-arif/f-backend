@@ -68,7 +68,7 @@ function createSlug(text) {
   return slug
     .split("-")
     .filter(Boolean)
-    .slice(0, 10)
+    .slice(0, 11)
     .join("-");
 }
 // ===========================
