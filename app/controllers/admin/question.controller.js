@@ -32,6 +32,7 @@ const corrections = {
   aia: "aaya",
   althiat: "tahiyyat",
 };
+
 function createSlug(text) {
   if (!text) return "no-slug";
 
