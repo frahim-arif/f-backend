@@ -31,13 +31,21 @@ function createSlug(text) {
     // ❌ remove special chars
     .replace(/[^\w\s-]/g, "")
 
-    // 🔥 normalize words (Banuri style)
-    .replace(/\b(my|mi|me)\b/g, "mein")
-    .replace(/\b(ky|k)\b/g, "ke")
-    .replace(/\b(awr|or|ur)\b/g, "aur")
-    .replace(/\b(qyqh|aqiqh|aqeeqah)\b/g, "aqeeqah")
-    .replace(/\b(rwayat)\b/g, "riwayat")
-    .replace(/\b(swal)\b/g, "sawal")
+    // 🔥 normalize words (Banuri style - strong version)
+.replace(/\b(my|mi|me)\b/g, "mein")
+.replace(/\b(ky|k)\b/g, "ke")
+.replace(/\b(awr|or|ur)\b/g, "aur")
+
+// 🔥 common Islamic / Urdu corrections
+.replace(/\b(swal|soal|sawal)\b/g, "sawal")
+.replace(/\b(aqeqah|aqiqah|aqeeqah|aqiqh|qyqh)\b/g, "aqeeqah")
+.replace(/\b(rwayat|riwayt|roaiat|rawayat)\b/g, "riwayat")
+.replace(/\b(shmar|shumar|shumaar)\b/g, "shumar")
+.replace(/\b(janor|janwar|janvar)\b/g, "janwar")
+
+// 🔥 common words fix
+.replace(/\b(mutaaliq|mutaliq|mutalliq)\b/g, "mutaliq")
+.replace(/\b(shari|sharai|sharayi)\b/g, "shar-i")
 
     // 🔥 IMPORTANT: stopwords REMOVE nahi — keep "ke", "aur", "ka"
     // Banuri style me yeh rehte hain
