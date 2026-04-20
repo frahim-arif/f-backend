@@ -92,10 +92,21 @@ exports.createQuestion = async (req, res) => {
   slug: frontendSlug
 } = req.body;
 
-    // 🔥 1. Generate clean slug
+   
+// 🔥 1. Generate base slug
 let baseSlug = createSlug(metaTitle || question);
 
-// 🔥 unique slug generate
+if (!baseSlug) baseSlug = "question";
+
+// 🔥 short ID generator
+function generateShortId() {
+  return (
+    Date.now().toString().slice(-4) +
+    Math.floor(Math.random() * 100)
+  );
+}
+
+// 🔥 2. Unique slug generate
 let finalSlug = "";
 let exists = true;
 
@@ -107,8 +118,9 @@ while (exists) {
   exists = !!found;
 }
 
+// 🔥 3. Keywords array
 const keywordArray = keywords
-  ? keywords.split(",").map(k => k.trim())
+  ? keywords.split(",").map(k => k.trim()).filter(Boolean)
   : [];
 
 // 🔥 2. Ensure unique slug
@@ -119,9 +131,9 @@ while (await Question.findOne({ slug })) {
 }
 
     // 🔥 3. Create question
-    const newQuestion = new Question({
+  const newQuestion = new Question({
   question,
-  slug,
+  slug: finalSlug, // 🔥 IMPORTANT
   answer,
   hawala1,
   hawala2,
