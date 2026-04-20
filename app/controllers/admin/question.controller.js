@@ -21,13 +21,21 @@ const corrections = {
   sholt: "sahulat",
   lie: "liye",
   shrai: "shar-i",
-  msjd: "masjid"
+  msjd: "masjid",
+  qnot: "qunoot",
+  jgh: "jagah",
+  prh: "parh",
+  lia: "liya",
+  phr: "phir",
+  iad: "yaad",
+  aia: "aaya",
+  althiat: "tahiyyat",
 };
 function createSlug(text) {
   if (!text) return "no-slug";
 
-  const urduMap = { 
-     ا: "a", آ: "aa", ب: "b", پ: "p", ت: "t", ٹ: "t",
+  const urduMap = {
+    ا: "a", آ: "aa", ب: "b", پ: "p", ت: "t", ٹ: "t",
     ث: "s", ج: "j", چ: "ch", ح: "h", خ: "kh",
     د: "d", ڈ: "d", ذ: "z", ر: "r", ڑ: "r",
     ز: "z", ژ: "zh", س: "s", ش: "sh", ص: "s",
@@ -39,7 +47,7 @@ function createSlug(text) {
     ء: "",
     ی: "i",
     ے: "e"
-   };
+  };
 
   let slug = text
     .split("")
@@ -52,11 +60,11 @@ function createSlug(text) {
 
   // ✅ dictionary apply
   Object.keys(corrections).forEach(word => {
-  slug = slug.replace(
-    new RegExp(`\\b${word}\\b`, "gi"),
-    corrections[word]
-  );
-});
+    slug = slug.replace(
+      new RegExp(`\\b${word}\\b`, "gi"),
+      corrections[word]
+    );
+  });
 
   slug = slug
     .replace(/aa+/g, "a")
@@ -80,46 +88,46 @@ function createSlug(text) {
 exports.createQuestion = async (req, res) => {
   try {
     const {
-  question,
-  answer,
-  hawala1,
-  hawala2,
-  hawala3,
-  category,
-  metaTitle,
-  metaDescription,
-  keywords,
-  slug: frontendSlug
-} = req.body;
+      question,
+      answer,
+      hawala1,
+      hawala2,
+      hawala3,
+      category,
+      metaTitle,
+      metaDescription,
+      keywords,
+      slug: frontendSlug
+    } = req.body;
 
     // 🔥 1. Generate clean slug
-let baseSlug = createSlug(metaTitle || question);
-let slug = baseSlug;
+    let baseSlug = createSlug(metaTitle || question);
+    let slug = baseSlug;
 
-const keywordArray = keywords
-  ? keywords.split(",").map(k => k.trim())
-  : [];
+    const keywordArray = keywords
+      ? keywords.split(",").map(k => k.trim())
+      : [];
 
-// 🔥 2. Ensure unique slug
-let count = 1;
-while (await Question.findOne({ slug })) {
-  slug = `${baseSlug}-${count}`;
-  count++;
-}
+    // 🔥 2. Ensure unique slug
+    let count = 1;
+    while (await Question.findOne({ slug })) {
+      slug = `${baseSlug}-${count}`;
+      count++;
+    }
 
     // 🔥 3. Create question
     const newQuestion = new Question({
-  question,
-  slug,
-  answer,
-  hawala1,
-  hawala2,
-  hawala3,
-  category,
-  metaTitle: metaTitle || question,
-  metaDescription: metaDescription || answer?.slice(0, 150),
-  keywords: keywordArray,
-});
+      question,
+      slug,
+      answer,
+      hawala1,
+      hawala2,
+      hawala3,
+      category,
+      metaTitle: metaTitle || question,
+      metaDescription: metaDescription || answer?.slice(0, 150),
+      keywords: keywordArray,
+    });
 
     await newQuestion.save();
 
