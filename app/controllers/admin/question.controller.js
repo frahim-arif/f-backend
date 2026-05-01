@@ -48,9 +48,7 @@ const corrections = {
   as: "us",
   shkhs: "shakhs",
   bioi: "biwi",
-  lrai: "larai",
-  chl: "chal",
-  rhi: "rahi",
+  lrai: "larai",chl: "chal",rhi: "rahi",ayk: "aik",shkhs: "shakhs",sna: "suna",he: "hai",kh: "ke",awrty: "aurat",jb: "jab",sal: "saal",gzrne: "guzarne",
 };
 
 function createSlug(text) {
