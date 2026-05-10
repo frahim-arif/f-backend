@@ -28,7 +28,7 @@ const corrections = {
   da: "dua",
   lia: "liya",
   phr: "phir",
-  iad: "yaad",jmah: "juma", nmaz: "namaz", sorh: "surah", ali: "al-ala", ghashih: "ghashiyah", prhna: "parhna",
+  iad: "yaad",jmah: "juma", nmaz: "namaz", sorh: "surah", ali: "aala", ghashih: "ghashiyah", prhna: "parhna",
   aia: "aaya",
   althiat: "tahiyyat",
   mi: "mein",
