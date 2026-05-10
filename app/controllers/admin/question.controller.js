@@ -32,7 +32,7 @@ const corrections = {
   aia: "aaya",
   althiat: "tahiyyat",
   mi: "mein",
-  chtai: "chatai",
+  chtai: "chatai",swal: "sawal", hsh: "hissa", w: "aur", s: "se", k: "ke",
   aor: "aur",
  qalin: "qaleen", zrort: "zarurat", zad: "ziyada", he: "hai", kia: "kiya", shkhs: "shakhs", anjmn: "anjuman", ia: "ya", akidmi: "academy", qam: "qaim", kya: "kya", as: "us",
   bioi: "biwi",bad: "baad", jmaat: "jamaat", phle: "pehle", wzw: "wuzu", awr: "aur", abart: "ibarat",
