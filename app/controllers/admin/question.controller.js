@@ -32,11 +32,11 @@ const corrections = {
   aia: "aaya",
   althiat: "tahiyyat",
   mi: "mein",
-  chtai: "chatai",swal: "sawal", hsh: "hissa", w: "aur", s: "se", k: "ke",
+  chtai: "chatai", swal: "sawal", hsh: "hissa", w: "aur", s: "se", k: "ke",
   aor: "aur",
- qalin: "qaleen", zrort: "zarurat", zad: "ziyada", he: "hai", kia: "kiya", shkhs: "shakhs", anjmn: "anjuman", ia: "ya", akidmi: "academy", qam: "qaim", kya: "kya", as: "us",
-  bioi: "biwi",bad: "baad", jmaat: "jamaat", phle: "pehle", wzw: "wuzu", awr: "aur", abart: "ibarat",
-  lrai: "larai",chl: "chal",rhi: "rahi",ayk: "aik",shkhs: "shakhs",sna: "suna",he: "hai",kh: "ke",awrty: "aurat",jb: "jab",sal: "saal",gzrne: "guzarne",
+  qalin: "qaleen", zrort: "zarurat", zad: "ziyada", he: "hai", kia: "kiya", shkhs: "shakhs", anjmn: "anjuman", ia: "ya", akidmi: "academy", qam: "qaim", kya: "kya", as: "us",
+  bioi: "biwi", bad: "baad", jmaat: "jamaat", phle: "pehle", wzw: "wuzu", awr: "aur", abart: "ibarat",
+  lrai: "larai", chl: "chal", rhi: "rahi", ayk: "aik", shkhs: "shakhs", sna: "suna", he: "hai", kh: "ke", awrty: "aurat", jb: "jab", sal: "saal", gzrne: "guzarne",
 };
 
 function createSlug(text) {
@@ -235,6 +235,10 @@ exports.updateQuestion = async (req, res) => {
 
       // 👉 save old slug BEFORE changing
       if (existing.slug && existing.slug !== slug) {
+        if (!existing.oldSlugs) {
+          existing.oldSlugs = [];
+        }
+
         existing.oldSlugs.push(existing.slug);
       }
 
