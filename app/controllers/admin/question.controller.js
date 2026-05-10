@@ -28,7 +28,7 @@ const corrections = {
   da: "dua",
   lia: "liya",
   phr: "phir",
-  iad: "yaad",jmah: "jamat", nmaz: "namaz", sorh: "surah", ali: "al-ala", ghashih: "ghashiyah", prhna: "parhna",
+  iad: "yaad",jmah: "juma", nmaz: "namaz", sorh: "surah", ali: "al-ala", ghashih: "ghashiyah", prhna: "parhna",
   aia: "aaya",
   althiat: "tahiyyat",
   mi: "mein",
@@ -86,7 +86,7 @@ function createSlug(text) {
   return slug
     .split("-")
     .filter(Boolean)
-    .slice(0, 11)
+    .slice(0, 12)
     .join("-");
 }
 
