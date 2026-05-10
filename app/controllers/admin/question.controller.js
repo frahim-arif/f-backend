@@ -213,12 +213,16 @@ exports.getQuestionsByCategory = async (req, res) => {
 
 // ===========================
 // 📌 Update Question
-// ===========================
 exports.updateQuestion = async (req, res) => {
   try {
     const id = req.params.id;
 
-    // ✅ Agar question change hua to slug update karo
+    const existing = await Question.findById(id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: "Not found" });
+    }
+
+    // 🔥 OLD SLUG SAVE SYSTEM
     if (req.body.question) {
       let baseSlug = createSlug(req.body.question);
       let slug = baseSlug;
@@ -229,24 +233,29 @@ exports.updateQuestion = async (req, res) => {
         count++;
       }
 
+      // 👉 save old slug BEFORE changing
+      if (existing.slug && existing.slug !== slug) {
+        existing.oldSlugs.push(existing.slug);
+      }
+
       req.body.slug = slug;
     }
 
-    // ✅ Keywords array me convert karo
+    // keywords conversion
     if (req.body.keywords) {
       req.body.keywords = req.body.keywords
         .split(",")
         .map((k) => k.trim());
     }
 
-    const updated = await Question.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    Object.assign(existing, req.body);
+
+    await existing.save();
 
     return res.json({
       success: true,
       message: "Question updated successfully",
-      data: updated,
+      data: existing,
     });
 
   } catch (err) {

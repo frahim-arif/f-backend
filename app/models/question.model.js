@@ -8,6 +8,13 @@ const questionSchema = new mongoose.Schema({
   hawala3: { type: String },
   category: { type: String, required: true },
   slug: { type: String, unique: true },
+
+  // ✅ ADD THIS
+  oldSlugs: {
+    type: [String],
+    default: []
+  },
+
   createdAt: { type: Date, default: Date.now },
 });
 
