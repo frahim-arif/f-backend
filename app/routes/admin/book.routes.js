@@ -20,6 +20,37 @@ module.exports = (app) => {
       res.json({ success: false, error: err.message });
     }
   });
+  // ✅ DELETE BOOK
+app.delete('/api/admin/books/:id', async (req, res) => {
+
+  try {
+
+    const deleted = await Book.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!deleted) {
+      return res.json({
+        success: false,
+        message: 'Book not found',
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Book deleted successfully',
+    });
+
+  } catch (err) {
+
+    res.json({
+      success: false,
+      error: err.message,
+    });
+
+  }
+
+});
 
   // ✅ GET SINGLE BOOK
   app.get('/api/books/:id', async (req, res) => {
