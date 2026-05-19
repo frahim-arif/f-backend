@@ -43,7 +43,7 @@ exports.getQuestions = async (req, res) => {
 };
 
 
-;
+const Question = require("../../models/question.model");
 
 // =================== ADD NEW QUESTION ===================
 exports.addQuestion = async (req, res) => {
@@ -97,18 +97,8 @@ exports.getQuestions = async (req, res) => {
 // =================== GET QUESTION BY SLUG ===================
 exports.getQuestionBySlug = async (req, res) => {
   try {
-
-    let slug = decodeURIComponent(req.params.slug)
-      .trim()
-      .toLowerCase();
-
-    const question = await Question.findOne({
-      $or: [
-        { slug: slug },
-        { slug: new RegExp(`^${slug}$`, "i") },
-        { oldSlugs: slug }
-      ]
-    });
+    const slug = req.params.slug;
+    const question = await Question.findOne({ slug });
 
     if (!question) {
       return res.status(404).json({
@@ -117,13 +107,12 @@ exports.getQuestionBySlug = async (req, res) => {
       });
     }
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       data: question,
     });
-
   } catch (err) {
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: err.message,
     });

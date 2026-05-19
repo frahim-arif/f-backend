@@ -47,9 +47,6 @@ server.use("/api/admin/auth", authRoutes); // ✔ app ❌ server ✔
 // ✅ Admin Question Routes
 const adminQuestionRoutes = require("./app/routes/admin/question.routes.js");
 server.use("/api/admin/questions", adminQuestionRoutes);
-// ✅ WEBSITE QUESTION ROUTES
-const websiteQuestionRoutes = require("./app/routes/website/question.routes.js");
-server.use("/api/website/questions", websiteQuestionRoutes);
 
 
 // Handle undefined routes

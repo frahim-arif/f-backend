@@ -12,19 +12,10 @@ module.exports = async function (req, res, next) {
     });
 
     if (!question) {
-      return res.status(404).json({
-        success: false,
-        message: "Not found"
-      });
+      return res.status(404).json({ success: false, message: "Not found" });
     }
 
-    // ✅ API request pe redirect mat karo
-    if (req.originalUrl.startsWith("/api")) {
-      req.question = question;
-      return next();
-    }
-
-    // ✅ only browser page redirect
+    // 🔥 old slug detect -> 301 redirect
     if (question.slug !== slug) {
       return res.redirect(301, `/questions/${question.slug}`);
     }
@@ -34,9 +25,6 @@ module.exports = async function (req, res, next) {
 
   } catch (err) {
     console.log("redirect error", err);
-
-    return res.status(500).json({
-      success: false
-    });
+    return res.status(500).json({ success: false });
   }
 };
