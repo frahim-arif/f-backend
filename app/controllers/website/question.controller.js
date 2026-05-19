@@ -97,8 +97,18 @@ exports.getQuestions = async (req, res) => {
 // =================== GET QUESTION BY SLUG ===================
 exports.getQuestionBySlug = async (req, res) => {
   try {
-    const slug = req.params.slug;
-    const question = await Question.findOne({ slug });
+
+    let slug = decodeURIComponent(req.params.slug)
+      .trim()
+      .toLowerCase();
+
+    const question = await Question.findOne({
+      $or: [
+        { slug: slug },
+        { slug: new RegExp(`^${slug}$`, "i") },
+        { oldSlugs: slug }
+      ]
+    });
 
     if (!question) {
       return res.status(404).json({
@@ -107,12 +117,13 @@ exports.getQuestionBySlug = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: question,
     });
+
   } catch (err) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: err.message,
     });
