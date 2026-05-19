@@ -43,7 +43,7 @@ exports.getQuestions = async (req, res) => {
 };
 
 
-const Question = require("../../models/question.model");
+;
 
 // =================== ADD NEW QUESTION ===================
 exports.addQuestion = async (req, res) => {
