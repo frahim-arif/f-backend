@@ -18,7 +18,7 @@ const corrections = {
   // tumhare naye words
   chlne: "chalne",
   phrne: "phirne",
-  sholt: "sahulat",
+  sholt: "sahulat",hafz: "hafiz", qran: "quran", rmzan: "ramzan", ashrh: "ashrah", atkaf: "itikaf", bith: "baith", gia: "gaya",
   lie: "liye",
   shrai: "shar-i",
   msjd: "masjid",bchh: "bachcha", tin: "teen", sghir: "sagheer", kse: "kise", khte: "kehte", hayya: "hayya", niz: "neez", kbir: "kabir",
