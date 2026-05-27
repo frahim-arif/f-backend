@@ -15,6 +15,8 @@ const corrections = {
 
   janor: "janwar",
 
+
+  
   // tumhare naye words
   chlne: "chalne",lrka: "ladka", fon: "phone", oidio: "audio", kl: "call", zriah: "zariye", aijab: "ijab",
   phrne: "phirne",nkah: "nikah", moqa: "mauqa", lrki: "ladki", ajazt: "ijazat", line: "lene", okil: "wakeel", goahan: "gawahan",
