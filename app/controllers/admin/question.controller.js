@@ -17,6 +17,7 @@ const corrections = {
 
 
   // tumhare naye words
+  mindk: "mendak", drhm: "dirham", ghir: "ghair", mslm: "muslim", pish: "paisa", kndidits: "candidates",
   ih: "yeh", dhli: "delhi", ja: "jaunga", mire: "mere", baozo: "bawuzu", mchhr: "machhar", kata: "kaata", khon: "khoon", chos: "choos",
   atkaf: "itikaf", snt: "sunnat", frq: "farq", oazh: "wazeh", frmaie: "farmaiye", qsmi: "qismein", frz: "farz", oajb: "wajib", msthb: "mustahab", an: "aur",
   chlne: "chalne",lrka: "ladka", fon: "phone", oidio: "audio", kl: "call", zriah: "zariye", aijab: "ijab",
