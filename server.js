@@ -15,9 +15,9 @@ server.get("/", (req, res) => {
   res.send("Recharge API Running 🚀");
 });
 
-// /* Routes */
-// const authRoutes = require("./app/routes/auth.routes");
-// server.use("/api/auth", authRoutes);
+/* Routes */
+const authRoutes = require("./app/routes/auth.routes");
+server.use("/api/auth", authRoutes);
 
 /* MongoDB Connect */
 mongoose.connect(process.env.MONGO_URI, {
@@ -25,6 +25,7 @@ mongoose.connect(process.env.MONGO_URI, {
 })
 .then(() => {
 
+  
   console.log("✅ MongoDB Connected");
 
   server.listen(5000, () => {
