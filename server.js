@@ -16,7 +16,7 @@ server.get("/", (req, res) => {
 });
 
 /* Routes */
-const authRoutes = require("./app/routes/auth.routes");
+const authRoutes = require("./app/routes/admin/auth.routes");
 server.use("/api/auth", authRoutes);
 
 /* MongoDB Connect */
@@ -25,7 +25,7 @@ mongoose.connect(process.env.MONGO_URI, {
 })
 .then(() => {
 
-  
+
   console.log("✅ MongoDB Connected");
 
   server.listen(5000, () => {
