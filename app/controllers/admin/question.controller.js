@@ -16,7 +16,7 @@ const corrections = {
   janor: "janwar",
 
 
-  // tumhare naye words
+  // tumhare naye words//
   
   ih: "yeh", dhli: "delhi", ja: "jaunga", mire: "mere", baozo: "bawuzu", mchhr: "machhar", kata: "kaata", khon: "khoon", chos: "choos",
   atkaf: "itikaf", snt: "sunnat", frq: "farq", oazh: "wazeh", frmaie: "farmaiye", qsmi: "qismein", frz: "farz", oajb: "wajib", msthb: "mustahab", an: "aur",

@@ -17,7 +17,9 @@ server.get("/", (req, res) => {
 
 /* Routes */
 const authRoutes = require("./app/routes/auth.routes");
+const categoryRoutes = require("./app/routes/category.routes");
 server.use("/api/auth", authRoutes);
+server.use("/api/categories", categoryRoutes);
 
 
 /* MongoDB Connect */
