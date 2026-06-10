@@ -21,7 +21,7 @@ router.get("/seed", async (req, res) => {
       { name: "جدید مسائل", slug: "jadeed-masail" },
       { name: "نماز", slug: "namaz" },
       { name: "حج", slug: "hajj" },
-      { name: "زکاة", slug: "zakat" },
+      { name: "زکوٰۃ", slug: "zakat" },
       { name: "قربانی", slug: "qurbani" },
       { name: "نکاح", slug: "nikah" },
       { name: "عقیقہ", slug: "aqiqah" },
