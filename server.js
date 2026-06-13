@@ -21,6 +21,8 @@ server.get('/', (req, res) => {
 // Admin Default Routes
 require('./app/routes/admin/default.routes.js')(server);
 
+require('./app/routes/admin/book.routes')(server);
+
 // Public Question Routes (For Frontend)
 const questionRoutes = require('./app/routes/admin/question.routes.js');
 server.use('/api/questions', questionRoutes);
