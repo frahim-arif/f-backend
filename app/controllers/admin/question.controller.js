@@ -24,7 +24,7 @@ const corrections = {
   phrne: "phirne",nkah: "nikah", moqa: "mauqa", lrki: "ladki", ajazt: "ijazat", line: "lene", okil: "wakeel", goahan: "gawahan",
   sholt: "sahulat",hafz: "hafiz", qran: "quran", rmzan: "ramzan", ashrh: "ashrah", bith: "baith", gia: "gaya",
   lie: "liye",zid: "zaid", amr: "umar", mkan: "makaan", khrida: "khareeda", khridar: "khareedar", kchh: "kuch",
-  shrai: "shar-i",jnazh: "janazah", tkbirat: "takbeerat", chhor: "chhod", slam: "salam", afzl: "afzal",
+  shrai: "shar-i",jnazh: "janazah", tkbirat: "takbeerat", chhor: "chhod", slam: "salam", afzl: "afzal", khareda: "khareeda", jaunga: "ja raha", rha: "raha", kmi: "kami", bishi: "beshi",
   msjd: "masjid",bchh: "bachcha", tin: "teen", sghir: "sagheer", kse: "kise", khte: "kehte", hayya: "hayya", niz: "neez", kbir: "kabir",
   qnot: "qunoot",badh: "baaz", pysh: "pesh", nzr: "nazar", hdhrt: "hazrat", amam: "imam", abw: "abu", hnyf: "hanifa", rhm: "rahmat", all: "allah", nzdyk: "nazdeek", mshrwa: "mashroo", malwm: "maloom", wty: "hoti",
   jgh: "jagah",alm: "alim", sahb: "sahab", kha: "kaha", juma: "juma", dikh: "dekh", til: "teel", lga: "laga", jaz: "jaiz",
