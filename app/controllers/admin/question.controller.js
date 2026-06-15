@@ -29,7 +29,7 @@ const corrections = {
   qnot: "qunoot",badh: "baaz", pysh: "pesh", nzr: "nazar", hdhrt: "hazrat", amam: "imam", abw: "abu", hnyf: "hanifa", rhm: "rahmat", all: "allah", nzdyk: "nazdeek", mshrwa: "mashroo", malwm: "maloom", wty: "hoti",
   jgh: "jagah",alm: "alim", sahb: "sahab", kha: "kaha", juma: "juma", dikh: "dekh", til: "teel", lga: "laga", jaz: "jaiz",
   prh: "parh",khtib: "khateeb", khtbh: "khutbah", dine: "dene", mmbr: "mimber", pr: "par", chrh: "charh", jae: "jaye", hazrin: "hazireen",
-  da: "dua", bnoa: "banwa", srkari: "sarkari", nokri: "naukri", hasl: "hasil", kisa: "kaisa", agr: "agar",
+  da: "dua", bnoa: "banwa", srkari: "sarkari", nokri: "naukri", hasl: "hasil", kisa: "kaisa", agr: "agar",trin: "train", prhte: "parhte", qble: "qible", trf: "taraf", khial: "khayal",
   lia: "liya",mzn: "muazzin", azan: "azan", hi: "hayya", alsla: "alas-salah", alflah: "alal-falah",mozn: "muazzin", dite: "dete", oqt: "waqt", klmat: "kalimat", klmh: "kalimah",
   phr: "phir",hzrt: "hazrat", noh: "nooh", alih: "alaihis-salam", lot: "loot", aiman: "imaan", laia: "laya",
   iad: "yaad",jmah: "juma", nmaz: "namaz", sorh: "surah", ali: "al-ala", ghashih: "ghashiyah", prhna: "parhna",
