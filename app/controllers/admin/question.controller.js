@@ -35,7 +35,7 @@ const corrections = {
   iad: "yaad",jmah: "juma", nmaz: "namaz", sorh: "surah", ali: "al-ala", ghashih: "ghashiyah", prhna: "parhna",
   aia: "aaya",rihanh: "rehanah", hzor: "huzoor", zojh: "zaujah", ozaht: "wazahat",fjr: "fajr", alslo: "as-salatu", khir: "khair", mn: "min", alnom: "an-naum", khna: "kehna", ks: "kis", hds: "hadith",
   althiat: "tahiyyat",bch: "bachche", wal: "wale", dn: "din", rka: "rakha", gya: "gaya", tyn: "teen", many: "maani",
-  mi: "mein",pir: "pair", kte: "katte", hoe: "huye", msnai: "masnoi", lgate: "lagate", ozo: "wuzu",
+  mi: "mein",pir: "pair", kte: "katte", hoe: "huye", msnai: "masnoi", lgate: "lagate", ozo: "wuzu",bink: "bank", sodi: "soodi", rqm: "raqam", ghr: "ghar", bnaia: "banaya",
   chtai: "chatai",asttat: "istitaat",krnsi: "currency", aoz: "iwaz", adhar: "udhar", khridna: "khareedna", hsh: "hissa", w: "aur", s: "se", k: "ke",sfr: "safar", hj: "hajj", rwangy: "rawangi", wqt: "waqt", wapsy: "wapasi", daa: "dua", shraa: "sharan", kysa: "kaisa",
   aor: "aur",ghnte: "ghante", oaste: "waste", bahr: "bahar", nkl: "nikal",mindk: "mendak", drhm: "dirham", ghir: "ghair", mslm: "muslim", pish: "paisa", kndidits: "candidates",
   qalin: "qaleen", zrort: "zarurat", zad: "ziyada", he: "hai", kia: "kiya", shkhs: "shakhs", anjmn: "anjuman", ia: "ya", akidmi: "academy", qam: "qaim", kya: "kya", as: "us",
