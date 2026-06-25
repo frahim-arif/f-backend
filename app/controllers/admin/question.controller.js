@@ -25,7 +25,7 @@ const corrections = {
   sholt: "sahulat",hafz: "hafiz", qran: "quran", rmzan: "ramzan", ashrh: "ashrah", bith: "baith", gia: "gaya",dhato: "dhatuon", mjsmh: "mujassamah", khrid: "khareed", frokht: "farokht", nhi: "nahi", asi: "aisi",
   lie: "liye",zid: "zaid", amr: "umar", mkan: "makaan", khrida: "khareeda", khridar: "khareedar", kchh: "kuch",shdidh: "shadeed", ojh: "wajah", oqf: "waqf", zmin: "zameen", tbadlh: "tabadlah",
   shrai: "shar-i",jnazh: "janazah", tkbirat: "takbeerat", chhor: "chhod", slam: "salam", afzl: "afzal", khareda: "khareeda", jaunga: "ja raha", rha: "raha", kmi: "kami", bishi: "beshi",
-  msjd: "masjid",bchh: "bachcha", tin: "teen", sghir: "sagheer", kse: "kise", khte: "kehte", hayya: "hayya", niz: "neez", kbir: "kabir",
+  msjd: "masjid",bchh: "bachcha", tin: "teen", sghir: "sagheer", kse: "kise", khte: "kehte", hayya: "hayya", niz: "neez", kbir: "kabir",haf: "half", astin: "aasteen", chmpr: "champar", phnti: "pehanti",
   qnot: "qunoot",badh: "baaz", pysh: "pesh", nzr: "nazar", hdhrt: "hazrat", amam: "imam", abw: "abu", hnyf: "hanifa", rhm: "rahmat", all: "allah", nzdyk: "nazdeek", mshrwa: "mashroo", malwm: "maloom", wty: "hoti",
   jgh: "jagah",alm: "alim", sahb: "sahab", kha: "kaha", juma: "juma", dikh: "dekh", til: "teel", lga: "laga", jaz: "jaiz",aort: "aurat", mhine: "mahine", hml: "haml", oh: "woh", rozh: "roza",
   prh: "parh",khtib: "khateeb", khtbh: "khutbah", dine: "dene", mmbr: "mimber", pr: "par", chrh: "charh", jae: "jaye", hazrin: "hazireen", rkoa: "ruku", chla: "chala",
