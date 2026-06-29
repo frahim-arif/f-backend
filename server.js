@@ -54,7 +54,8 @@ server.get('*', (req, res) => {
   res.send('Page not found.');
 });
 
-
+const majmoonRoutes = require("./app/routes/website/majmoon.routes");
+server.use("/api/majameen", majmoonRoutes);
 
 mongoose.connect(
   "mongodb://frahim:frahim123@ac-xa9tri4-shard-00-00.hn7plmp.mongodb.net:27017,ac-xa9tri4-shard-00-01.hn7plmp.mongodb.net:27017,ac-xa9tri4-shard-00-02.hn7plmp.mongodb.net:27017/fatawa?ssl=true&replicaSet=atlas-y21xpi-shard-0&authSource=admin&retryWrites=true&w=majority",
