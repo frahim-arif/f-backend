@@ -30,8 +30,6 @@ server.use('/api/questions', questionRoutes);
 const categoryRoutes = require('./app/routes/category.routes');
 server.use('/api/categories', categoryRoutes);
 
-
-
 // ---------------------------
 
 // Public Courses (Website)
@@ -49,13 +47,6 @@ server.use("/api/admin/auth", authRoutes); // ✔ app ❌ server ✔
 // ✅ Admin Question Routes
 const adminQuestionRoutes = require("./app/routes/admin/question.routes.js");
 server.use("/api/admin/questions", adminQuestionRoutes);
-// Admin Majameen Routes
-const adminMajmoonRoutes = require("./app/routes/admin/majmoon.routes");
-server.use("/api/admin/majameen", majmoonRoutes);
-
-const majmoonRoutes = require("./app/routes/website/majmoon.routes");
-server.use("/api/majameen", majmoonRoutes);
-
 
 
 // Handle undefined routes
