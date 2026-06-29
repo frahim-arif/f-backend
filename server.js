@@ -30,9 +30,9 @@ server.use('/api/questions', questionRoutes);
 const categoryRoutes = require('./app/routes/category.routes');
 server.use('/api/categories', categoryRoutes);
 
-// Public Majameen Routes
-const majmoonRoutes = require("./app/routes/website/majmoon.routes");
-server.use("/api/majameen", majmoonRoutes);
+// // Public Majameen Routes
+// const majmoonRoutes = require("./app/routes/website/majmoon.routes");
+// server.use("/api/majameen", majmoonRoutes);
 
 // ---------------------------
 
