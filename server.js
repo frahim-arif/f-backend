@@ -54,7 +54,7 @@ const adminMajmoonRoutes = require("./app/routes/admin/majmoon.routes");
 server.use("/api/admin/majameen", majmoonRoutes);
 
 const majmoonRoutes = require("./app/routes/website/majmoon.routes");
-server.use("/api/majameen", majmoonRoutes);
+server.use("/api/website/majameen", majmoonRoutes);
 
 
 
