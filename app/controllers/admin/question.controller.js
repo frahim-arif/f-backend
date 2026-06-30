@@ -113,7 +113,9 @@ exports.createQuestion = async (req, res) => {
     } = req.body;
 
     // 🔥 1. Generate clean slug
-    let baseSlug = createSlug(metaTitle || question);
+    let baseSlug = frontendSlug?.trim()
+  ? createSlug(frontendSlug)
+  : createSlug(metaTitle || question);
     let slug = baseSlug;
 
     const keywordArray = keywords
@@ -227,27 +229,29 @@ exports.updateQuestion = async (req, res) => {
     }
 
     // 🔥 OLD SLUG SAVE SYSTEM
-    if (req.body.question) {
-      let baseSlug = createSlug(req.body.question);
-      let slug = baseSlug;
+if (req.body.question || req.body.slug) {
+  let baseSlug = req.body.slug?.trim()
+    ? createSlug(req.body.slug)
+    : createSlug(req.body.question);
 
-      let count = 1;
-      while (await Question.findOne({ slug, _id: { $ne: id } })) {
-        slug = `${baseSlug}-${count}`;
-        count++;
-      }
+  let slug = baseSlug;
 
-      // 👉 save old slug BEFORE changing
-      if (existing.slug && existing.slug !== slug) {
-        if (!existing.oldSlugs) {
-          existing.oldSlugs = [];
-        }
+  let count = 1;
+  while (await Question.findOne({ slug, _id: { $ne: id } })) {
+    slug = `${baseSlug}-${count}`;
+    count++;
+  }
 
-        existing.oldSlugs.push(existing.slug);
-      }
-
-      req.body.slug = slug;
+  if (existing.slug && existing.slug !== slug) {
+    if (!existing.oldSlugs) {
+      existing.oldSlugs = [];
     }
+
+    existing.oldSlugs.push(existing.slug);
+  }
+
+  req.body.slug = slug;
+}
 
     // keywords conversion
     if (req.body.keywords) {
