@@ -18,7 +18,7 @@ const corrections = {
 
   // tumhare naye words//
   
-  ih: "yeh", dhli: "delhi", ja: "jaunga", mire: "mere", baozo: "bawuzu", mchhr: "machhar", kata: "kaata", khon: "khoon", chos: "choos",
+  ih: "yeh", dhli: "delhi", ja: "jaunga", mire: "mere", baozo: "bawuzu", mchhr: "machhar", kata: "kaata", khon: "khoon", chos: "choos",kimre: "camera", tsoir: "tasveer", kshi: "kashi", ajrt: "ujrat", hlal: "halal",
   atkaf: "itikaf", snt: "sunnat", frq: "farq", oazh: "wazeh", frmaie: "farmaiye", qsmi: "qismein", frz: "farz", oajb: "wajib", msthb: "mustahab", an: "aur",
   chlne: "chalne",lrka: "ladka", fon: "phone", oidio: "audio", kl: "call", zriah: "zariye", aijab: "ijab",oaldin: "walidain", sb: "sab", sath: "saath", rhte: "rahte", aolad: "aulad", km: "kama",
   phrne: "phirne",nkah: "nikah", moqa: "mauqa", lrki: "ladki", ajazt: "ijazat", line: "lene", okil: "wakeel", goahan: "gawahan",zamen: "zameen", gi: "gayi", js: "jis",
