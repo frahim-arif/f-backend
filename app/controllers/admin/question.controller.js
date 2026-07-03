@@ -32,7 +32,7 @@ const corrections = {
   da: "dua", bnoa: "banwa", srkari: "sarkari", nokri: "naukri", hasl: "hasil", kisa: "kaisa", agr: "agar",trin: "train", prhte: "parhte", qble: "qible", trf: "taraf", khial: "khayal",
   lia: "liya",mzn: "muazzin", azan: "azan", hi: "hayya", alsla: "alas-salah", alflah: "alal-falah",mozn: "muazzin", dite: "dete", oqt: "waqt", klmat: "kalimat", klmh: "kalimah",
   phr: "phir",hzrt: "hazrat", noh: "nooh", alih: "alaihis-salam", lot: "loot", aiman: "imaan", laia: "laya",mrde: "murde", dfnane: "dafnane", bqrh: "baqarah", aol: "awwal", aiat: "ayat",
-  iad: "yaad",jmah: "juma", nmaz: "namaz", sorh: "surah", ali: "al-ala", ghashih: "ghashiyah", prhna: "parhna",nmste: "namaste", khe: "kahe", joab: "jawab",
+  iad: "yaad",jmah: "juma", nmaz: "namaz", sorh: "surah", ali: "al-ala", ghashih: "ghashiyah", prhna: "parhna",nmste: "namaste", khe: "kahe", joab: "jawab",rkat: "rakaat", sjd: "sajdah", sho: "sahw", drst: "durust", hogi: "hogi",
   aia: "aaya",rihanh: "rehanah", hzor: "huzoor", zojh: "zaujah", ozaht: "wazahat",fjr: "fajr", alslo: "as-salatu", khir: "khair", mn: "min", alnom: "an-naum", khna: "kehna", ks: "kis", hds: "hadith",
   althiat: "tahiyyat",bch: "bachche", wal: "wale", dn: "din", rka: "rakha", gya: "gaya", tyn: "teen", many: "maani",jlsh: "jalsah", bin: "bain", alsjdtin: "as-sajdatain", althit: "tahiyyat", yad: "yaad",
   mi: "mein",pir: "pair", kte: "katte", hoe: "huye", msnai: "masnoi", lgate: "lagate", ozo: "wuzu",bink: "bank", sodi: "soodi", rqm: "raqam", ghr: "ghar", bnaia: "banaya",
@@ -41,7 +41,7 @@ const corrections = {
   qalin: "qaleen", zrort: "zarurat", zad: "ziyada", he: "hai", kia: "kiya", shkhs: "shakhs", anjmn: "anjuman", ia: "ya", akidmi: "academy", qam: "qaim", kya: "kya", as: "us",groi: "girvi", rkhe: "rakhe", zko: "zakat",
   bioi: "biwi", bad: "baad", jmaat: "jamaat", phle: "pehle", wzw: "wuzu", awr: "aur", abart: "ibarat",akbr: "akbar", asghr: "asghar", thrir: "tehreer", kri: "kari",hadith:"hadsh",
   lrai: "larai", chl: "chal", rhi: "rahi", ayk: "aik", shkhs: "shakhs", sna: "suna", he: "hai", kh: "ke", awrty: "aurat", jb: "jab", sal: "saal", gzrne: "guzarne",srk: "sadak", chpl: "chappal", phn: "pehen", prhne: "parhne", hkm: "hukm",
-  borhe: "boodhe", admi: "aadmi", rozo: "rozon", fdih: "fidyah", raqam: "raqam", ghair: "ghair", msthq: "mustahiq",krsi: "kursi", rkhi: "rakhi", chiz: "cheez", sjdh: "sajdah",mtadd: "mutaaddid", jmato: "jamaaton", hdis: "hadith",
+  borhe: "boodhe", admi: "aadmi", rozo: "rozon", fdih: "fidyah", raqam: "raqam", ghair: "ghair", msthq: "mustahiq",krsi: "kursi", rkhi: "rakhi", chiz: "cheez", sjdh: "sajdah",mtadd: "mutaaddid", jmato: "jamaaton", hdis: "hadith",fatmh: "fatimah", prhai: "parhai", tjhiz: "tajheez", tkfin: "takfeen",
 };
 
 function createSlug(text) {
