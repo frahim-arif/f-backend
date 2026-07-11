@@ -44,7 +44,7 @@ const corrections = {
   borhe: "boodhe", admi: "aadmi", rozo: "rozon", fdih: "fidyah", raqam: "raqam", ghair: "ghair", msthq: "mustahiq",krsi: "kursi", rkhi: "rakhi", chiz: "cheez", sjdh: "sajdah",mtadd: "mutaaddid", jmato: "jamaaton", hdis: "hadith",fatmh: "fatimah", prhai: "parhai", tjhiz: "tajheez", tkfin: "takfeen",
   mkbr: "mukabbir", fasd: "fasid", mqtdio: "muqtadiyon",ayat: "ayat", tlaot: "tilawat", kharji: "khariji", admi: "aadmi", qrat: "qiraat", sni: "suni", ojb: "wajib", nhi: "nahi",droazh: "darwazah",
   qari: "qari", samain: "sameen", ajtmai: "ijtimai", sjde: "sajde", mslh: "maslah",aidgah: "eidgah", fadh: "faida", athane: "uthane",aoli: "ula", trk: "tark", kafi: "kaafi",qad: "qa'dah",phla: "pehla", kb: "kab",
-  aslam: "islam",fanns: "finance", mshin: "machine",
+  aslam: "islam",fanns: "finance", mshin: "machine",hoa: "hua",nazl: "nazil",hjrt: "hijrat",
 };
 
 function createSlug(text) {
