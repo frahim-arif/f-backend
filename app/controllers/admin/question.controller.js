@@ -43,7 +43,7 @@ const corrections = {
   lrai: "larai", chl: "chal", rhi: "rahi", ayk: "aik", shkhs: "shakhs", sna: "suna", he: "hai", kh: "ke", awrty: "aurat", jb: "jab", sal: "saal", gzrne: "guzarne",srk: "sadak", chpl: "chappal", phn: "pehen", prhne: "parhne", hkm: "hukm",
   borhe: "boodhe", admi: "aadmi", rozo: "rozon", fdih: "fidyah", raqam: "raqam", ghair: "ghair", msthq: "mustahiq",krsi: "kursi", rkhi: "rakhi", chiz: "cheez", sjdh: "sajdah",mtadd: "mutaaddid", jmato: "jamaaton", hdis: "hadith",fatmh: "fatimah", prhai: "parhai", tjhiz: "tajheez", tkfin: "takfeen",
   mkbr: "mukabbir", fasd: "fasid", mqtdio: "muqtadiyon",ayat: "ayat", tlaot: "tilawat", kharji: "khariji", admi: "aadmi", qrat: "qiraat", sni: "suni", ojb: "wajib", nhi: "nahi",droazh: "darwazah",
-  qari: "qari", samain: "sameen", ajtmai: "ijtimai", sjde: "sajde", mslh: "maslah",aidgah: "eidgah", fadh: "faida", athane: "uthane",aoli: "ula", trk: "tark", kafi: "kaafi",qad: "qa'dah",phla: "pehla", kb: "kab",
+  qari: "qari", samain: "sameen", ajtmai: "ijtimai", sjde: "sajde", mslh: "maslah",aidgah: "eidgah", fadh: "faida", athane: "uthane",aoli: "ula", trk: "tark", kafi: "kaafi",qad: "qa'dah",phla: "pehla", kb: "kab",adt: "iddat", doran: "dauran", zna: "zina", haml: "hamal", sort: "soorat",
   aslam: "islam",fanns: "finance", mshin: "machine",hoa: "hua",nazl: "nazil",hjrt: "hijrat",garia: "gaadiyan", pas: "paas",bia: "bai", mdt: "muddat", tain: "tayyun", zrori: "zaroori",tig: "tag", lge: "lage",aib: "aib", tarif: "tareef", ma: "maa", msal: "misal", tehrer: "tehreer", kari: "karein",
 };
 
