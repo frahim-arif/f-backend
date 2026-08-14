@@ -48,7 +48,7 @@ const corrections = {
   tkbir: "takbeer", ula: "oola", fzilt: "fazilat",amdni: "aamdani", oali: "wali",sorto: "sooraton", khiar: "khiyar", shrt: "shart", baqi: "baqi", rhta: "rahta",mlazmt: "mulazmat", otn: "watan", aqamt: "iqamat", qrar: "qarar", dia: "diya", jaye: "jayega",lhaf: "lihaf", tr: "tar", kpre: "kapde",drmiani: "darmiyani", sf: "saff", rkh: "rakh",
   sizirin: "scissoring", bad: "baad", dami: "damai", mana: "mane", aprishn: "operation",tofan: "toofan", zlzlh: "zalzalah", msibt: "museebat",ahtlam: "ihtilam", takhir: "taakhir", qtre: "qatre", ane: "aane", sorat: "soorat", ghsl: "ghusl",
   rsol: "rasool", saih: "sayah", zamen: "zameen", prta: "parda",hoz: "hauz", tnki: "tank", pani: "paani", jari: "jaari",ten: "teen", sal: "saal", bche: "bachche", nam: "naam", tbdil: "tabdeel",sodi: "soodi", piso: "paise", qrbani: "qurbani", shrik: "shareek",
-  khride: "khareede", mal: "maal", nqs: "naqs", nikal: "nikal", ae: "gaye", kiya: "kya", jayega: "jayega",hram: "haraam", mal: "maal", krne: "karne", saqt: "saaqit", hoga: "hoga",thike: "theke", mchhlia: "machhliyaan", pkrne: "pakadne",hiz: "haiz", drmia: "darmiyan", paki: "paaki",
+  khride: "khareede", mal: "maal", nqs: "naqs", nikal: "nikal", ae: "gaye", kiya: "kya", jayega: "jayega",hram: "haraam", mal: "maal", krne: "karne", saqt: "saaqit", hoga: "hoga",thike: "theke", mchhlia: "machhliyaan", pkrne: "pakadne",hiz: "haiz", drmia: "darmiyan", paki: "paaki",aghoa: "agwa", pkr: "pakda", mgr: "magar", bchcha: "bachcha", nh: "na",
 };
 
 function createSlug(text) {
