@@ -51,7 +51,7 @@ const corrections = {
   khride: "khareede", mal: "maal", nqs: "naqs", nikal: "nikal", ae: "gaye", kiya: "kya", jayega: "jayega",hram: "haraam", mal: "maal", krne: "karne", saqt: "saaqit", hoga: "hoga",thike: "theke", mchhlia: "machhliyaan", pkrne: "pakadne",hiz: "haiz", drmia: "darmiyan", paki: "paaki",aghoa: "agwa", pkr: "pakda", mgr: "magar", bchcha: "bachcha", nh: "na",
   anjkshn: "injection", lgoane: "lagane", totta: "tootta",rkhsti: "rukhsati", ten: "teen", tlaq: "talaaq",jmai: "jamaai", lite: "liye",  la: "la", hol: "hawla", ola: "oola", qo: "quwwat", ala: "ala", ballh: "billah",oats: "Whats", aip: "App", thriri: "tehreeri", tor: "taur", ten: "teen", talaq: "talaaq",
   anglind: "England", ane: "aane", oale: "wale", dbiz: "dbeez", soti: "sooti", mozo: "moze", msh: "masah",ds: "das", bis: "bees", mnzlh: "manzilah", amart: "imarat", mnzl: "manzil", bnane: "banane",qrani: "qurani", aiat: "ayat", dai: "dua", lkhoane: "likhwane",
-  goaho: "gawahon",  qbol: "qubool", alim: "ilm", zarori: "zaroori",
+  goaho: "gawahon", qbol: "qubool", alim: "ilm", zarori: "zaroori", 
 };
 
 function createSlug(text) {
