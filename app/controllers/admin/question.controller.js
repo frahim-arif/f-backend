@@ -80,7 +80,19 @@ function createSlug(text) {
   slug = slug
     .toLowerCase()
     .replace(/[^\w\s-]/g, "");
+console.log("BEFORE DICTIONARY:", slug);
 
+Object.keys(corrections).forEach(word => {
+  const regex = new RegExp(`\\b${word}\\b`, "gi");
+
+  if (regex.test(slug)) {
+    console.log("MATCH:", word, "=>", corrections[word]);
+  }
+
+  slug = slug.replace(regex, corrections[word]);
+});
+
+console.log("AFTER DICTIONARY:", slug);
   // ✅ dictionary apply
   Object.keys(corrections).forEach(word => {
     slug = slug.replace(
