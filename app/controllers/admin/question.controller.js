@@ -1,5 +1,4 @@
 const Question = require("../../models/question.model");
-const fetch = require("node-fetch"); // ✅ required if Node < 18
 const corrections = {
   // basic
   soal: "sawal",
@@ -80,19 +79,7 @@ function createSlug(text) {
   slug = slug
     .toLowerCase()
     .replace(/[^\w\s-]/g, "");
-console.log("BEFORE DICTIONARY:", slug);
 
-Object.keys(corrections).forEach(word => {
-  const regex = new RegExp(`\\b${word}\\b`, "gi");
-
-  if (regex.test(slug)) {
-    console.log("MATCH:", word, "=>", corrections[word]);
-  }
-
-  slug = slug.replace(regex, corrections[word]);
-});
-
-console.log("AFTER DICTIONARY:", slug);
   // ✅ dictionary apply
   Object.keys(corrections).forEach(word => {
     slug = slug.replace(
@@ -167,16 +154,6 @@ exports.createQuestion = async (req, res) => {
     });
 
     await newQuestion.save();
-
-    // 🔥 4. Google Sitemap Ping
-    try {
-      await fetch(
-        "https://www.google.com/ping?sitemap=https://www.maslakedeoband.in/sitemap.xml"
-      );
-      console.log("✅ Google ping sent");
-    } catch (err) {
-      console.log("⚠️ Ping failed (ignore):", err.message);
-    }
 
     return res.json({
       success: true,
