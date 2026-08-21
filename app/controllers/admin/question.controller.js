@@ -52,7 +52,7 @@ const corrections = {
   anglind: "England", ane: "aane", oale: "wale", dbiz: "dbeez", soti: "sooti", mozo: "moze", msh: "masah",ds: "das", bis: "bees", mnzlh: "manzilah", amart: "imarat", mnzl: "manzil", bnane: "banane",qrani: "qurani", aiat: "ayat", dai: "dua", lkhoane: "likhwane",
   goaho: "gawahon", qbol: "qubool", alim: "ilm", zarori: "zaroori", ksi: "kisi", qrz: "qarz", kr: "kar", krna: "karna", le: "le", sharan: "shar'an", alm : "aalim", jahl : "jahil",ne : "naye",naqabl: "na-qabil", astamal: "istemal", ashia: "ashya", jlane: "jalane", dfn: "dafn",
   sria: "surya", tloa: "tulu",hndo: "hindu",dobarh: "dobarah",zkhm: "zakhm", pti: "patti",amrh : "umrah",toaf: "tawaf",ade: "yeade",sorat: "surat",sai: "saie",dioali: "diwali",astits: "status", lgana: "lagana",mslman: "muslim",talq: "taalluq",khtm: "khatm",
-  pora: "poora",sal: "saal",bad: "baad", nsab: "nisab", hlak: "halaak", hojae: "ho jae",zakat :"zakaat",lazm: "laazim",amh: "aimmah", arbah: "arba'a", nzdik: "nazdeek", bes: "bees", rakat: "rakaat", kama: "kam", traoih: "taraweeh",
+  pora: "poora",sal: "saal",bad: "baad", nsab: "nisab", hlak: "halaak",  hojae: "ho jae",zakat :"zakaat",lazm: "laazim",amh: "aimmah", arbah: "arba'a", nzdik: "nazdeek", bes: "bees", rakat: "rakaat", kama: "kam", traoih: "taraweeh",
 };
 
 function createSlug(text) {
