@@ -54,7 +54,7 @@ const corrections = {
   sria: "surya", tloa: "tulu",hndo: "hindu",dobarh: "dobarah",zkhm: "zakhm", pti: "patti",amrh : "umrah",toaf: "tawaf",ade: "yeade",sorat: "surat",sai: "saie",dioali: "diwali",astits: "status", lgana: "lagana",mslman: "muslim",talq: "taalluq",khtm: "khatm",kimrh: "camera", tasver: "tasveer",
   pora: "poora",sal: "saal",bad: "baad", nsab: "nisab", hlak: "halaak",  hojae: "ho jae",zakat :"zakaat",lazm: "laazim",amh: "aimmah", arbah: "arba'a", nzdik: "nazdeek", bes: "bees", rakat: "rakaat", kama: "kam", traoih: "taraweeh",bito: "beton",dm: "dam",hayya: "hai",qurbani: "qurbani",tmam: "tamaam", shrka: "shuraka",nam: "naam",
   mqdar: "miqdaar", fqha: "fuqaha", akhtlaf: "ikhtilaaf", rajh: "raajih", qol: "qaul",mhr: "mehr",qran: "quran",mqrr: "muqarrar",mtalq: "mutalliq",hoai: "hawai",mhrm: "mahram",mojodgi: "maujoodgi", zarori: "zaroori",hjr: "hajar", asod: "aswad",  bosh: "bosa", pthro: "pattharon", chomna: "choomna",mhrmat: "mahramaat", abdih: "abadiyah", mtlb: "matlab",
-  ozn: "wazan", kie: "kiye", bndl: "bundle", dbe: "dabbe", saman: "samaan",mdrsh: "madrasa", albnat: "al-banaat", lrkio: "ladkiyon",qsda: "qasdan", bajmat: "ba-jamaat",
+  ozn: "wazan", kie: "kiye", bndl: "bundle", dbe: "dabbe", saman: "samaan",mdrsh: "madrasa", albnat: "al-banaat", lrkio: "ladkiyon",qsda: "qasdan", bajmat: "ba-jamaat",admi: "aadmi",  msafr: "musaafir", bnta: "banta", nit: "niyyat",
 };
 
 function createSlug(text) {
