@@ -78,10 +78,11 @@ const questionSchema = new mongoose.Schema(
       type: String,
     },
 
+    // Frontend se "نکاح" jaisa category name aa raha hai
     category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      type: String,
       required: true,
+      trim: true,
     },
 
     // =====================================================
@@ -229,7 +230,7 @@ const questionSchema = new mongoose.Schema(
 
     oldBanglaSlugs: {
       type: [String],
-      default: [],
+      default: "",
     },
   },
   {
