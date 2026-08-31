@@ -51,6 +51,21 @@ server.use("/api/admin/auth", authRoutes);
 const adminQuestionRoutes = require("./app/routes/admin/question.routes");
 server.use("/api/admin/questions", adminQuestionRoutes);
 
+const englishQuestionRoutes = require("./app/routes/english/question.routes");
+
+server.use(
+  "/api/en/questions",
+  englishQuestionRoutes
+);
+
+
+const banglaQuestionRoutes = require("./app/routes/bangla/question.routes");
+
+server.use(
+  "/api/bn/questions",
+  banglaQuestionRoutes
+);
+
 // =========================
 // 404 (Always Last)
 // =========================
