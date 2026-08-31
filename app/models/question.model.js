@@ -1,49 +1,131 @@
+// const mongoose = require("mongoose");
+
+// const questionSchema = new mongoose.Schema({
+//   question: { type: String, required: true },
+
+//   answer: { type: String, required: true },
+
+//   hawala1: { type: String },
+//   hawala2: { type: String },
+//   hawala3: { type: String },
+
+//   category: { type: String, required: true },
+
+//   slug: {
+//     type: String,
+//     unique: true,
+//     lowercase: true,
+//     trim: true,
+//     index: true,
+//   },
+
+//   metaTitle: { type: String },
+
+//   metaDescription: { type: String },
+
+//   keywords: {
+//     type: [String],
+//     default: [],
+//   },
+
+//   oldSlugs: {
+//     type: [String],
+//     default: [],
+//   },
+
+//   createdAt: {
+//     type: Date,
+//     default: Date.now,
+//   },
+// });
+
+// module.exports = mongoose.model(
+//   "Question",
+//   questionSchema
+// );
+
+
+
+
+
 const mongoose = require("mongoose");
 
-const questionSchema = new mongoose.Schema({
-  question: { type: String, required: true },
+const questionSchema = new mongoose.Schema(
+  {
+    // =====================================================
+    // ORIGINAL / URDU
+    // =====================================================
 
-  answer: { type: String, required: true },
+    question: {
+      type: String,
+      trim: true,
+      default: "",
+    },
 
-  hawala1: { type: String },
-  hawala2: { type: String },
-  hawala3: { type: String },
+    answer: {
+      type: String,
+      default: "",
+    },
 
-  category: { type: String, required: true },
+    hawala1: {
+      type: String,
+      default: "",
+    },
 
-  slug: {
-    type: String,
-    unique: true,
-    lowercase: true,
-    trim: true,
-    index: true,
-  },
+    hawala2: {
+      type: String,
+      default: "",
+    },
 
-  metaTitle: { type: String },
+    hawala3: {
+      type: String,
+      default: "",
+    },
 
-  metaDescription: { type: String },
+    // Urdu category
+    category: {
+      type: String,
+      trim: true,
+      default: "",
+    },
 
-  keywords: {
-    type: [String],
-    default: [],
-  },
+    // =====================================================
+    // URDU SEO
+    // =====================================================
 
-  oldSlugs: {
-    type: [String],
-    default: [],
-  },
+    slug: {
+      type: String,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      index: true,
+      sparse: true,
+    },
 
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+    metaTitle: {
+      type: String,
+      default: "",
+    },
 
-module.exports = mongoose.model(
-  "Question",
-  questionSchema
+    metaDescription: {
+      type: String,
+      default: "",
+    },
+
+    keywords: {
+      type: [String],
+      default: [],
+    },
+
+    oldSlugs: {
+      type: [String],
+      default: [],
+    },
+
+    // =====================================================
+   
+    
 );
 
-
-
+module.exports = mongoose.model("Question", questionSchema);
 
