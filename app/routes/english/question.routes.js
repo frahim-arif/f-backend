@@ -3,8 +3,13 @@ const express = require("express");
 
 const router = express.Router();
 
-// ✅ English ka ALAG controller
-const questionController = require("../../controllers/admin/englishQuestion.controller");
+// =====================================================
+// ENGLISH QUESTION CONTROLLER
+// =====================================================
+
+const questionController = require(
+  "../../controllers/admin/englishQuestion.controller"
+);
 
 // =====================================================
 // CREATE ENGLISH QUESTION
