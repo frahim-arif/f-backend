@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 
 const englishQuestionSchema = new mongoose.Schema(
@@ -21,25 +20,28 @@ const englishQuestionSchema = new mongoose.Schema(
     hawala1: {
       type: String,
       default: "",
+      trim: true,
     },
 
     hawala2: {
       type: String,
       default: "",
+      trim: true,
     },
 
     hawala3: {
       type: String,
       default: "",
+      trim: true,
     },
 
     // =====================================================
-    // CATEGORY
+    // ENGLISH CATEGORY
     // =====================================================
 
     category: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      ref: "EnglishCategory",
       required: true,
     },
 
@@ -58,11 +60,13 @@ const englishQuestionSchema = new mongoose.Schema(
     metaTitle: {
       type: String,
       default: "",
+      trim: true,
     },
 
     metaDescription: {
       type: String,
       default: "",
+      trim: true,
     },
 
     keywords: {
@@ -82,5 +86,7 @@ const englishQuestionSchema = new mongoose.Schema(
 
 module.exports =
   mongoose.models.EnglishQuestion ||
-  mongoose.model("EnglishQuestion", englishQuestionSchema);
-
+  mongoose.model(
+    "EnglishQuestion",
+    englishQuestionSchema
+  );
