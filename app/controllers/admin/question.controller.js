@@ -970,16 +970,18 @@ exports.createBanglaQuestion = async (
     });
 
   } catch (error) {
-    console.error(
-      "❌ BANGLA CREATE ERROR:",
-      error
-    );
+  console.log("=================================");
+  console.log("❌ BANGLA CREATE ERROR");
+  console.log("STATUS:", error.status);
+  console.log("MESSAGE:", error.message);
+  console.log("ERROR:", error);
+  console.log("=================================");
 
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  return res.status(500).json({
+    success: false,
+    message: error.message || "Failed to add Bangla question",
+  });
+}
 };
 
 
