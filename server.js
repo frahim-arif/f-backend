@@ -59,6 +59,8 @@ server.use(
 );
 
 
+
+
 const banglaQuestionRoutes = require("./app/routes/bangla/question.routes");
 
 server.use(
@@ -66,6 +68,15 @@ server.use(
   banglaQuestionRoutes
 );
 
+
+const englishCategoryRoutes = require(
+  "./app/routes/english/category.routes"
+);
+
+server.use(
+  "/api/en/categories",
+  englishCategoryRoutes
+);
 // =========================
 // 404 (Always Last)
 // =========================
