@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 
 const EnglishCategory = require("../../models/englishCategory.model");
@@ -54,10 +55,9 @@ router.get("/seed", async (req, res) => {
     ];
 
     for (const cat of defaultCategories) {
-      const exists =
-        await EnglishCategory.findOne({
-          slug: cat.slug,
-        });
+      const exists = await EnglishCategory.findOne({
+        slug: cat.slug,
+      });
 
       if (!exists) {
         await EnglishCategory.create(cat);
@@ -66,14 +66,10 @@ router.get("/seed", async (req, res) => {
 
     res.json({
       success: true,
-      message:
-        "English categories seeded successfully!",
+      message: "English categories seeded successfully!",
     });
   } catch (error) {
-    console.error(
-      "ENGLISH CATEGORY SEED ERROR:",
-      error
-    );
+    console.error("ENGLISH CATEGORY SEED ERROR:", error);
 
     res.status(500).json({
       success: false,
@@ -89,19 +85,16 @@ router.get("/seed", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const categories =
-      await EnglishCategory.find()
-        .sort({ createdAt: -1 });
+    const categories = await EnglishCategory.find().sort({
+      createdAt: -1,
+    });
 
     res.json({
       success: true,
       data: categories,
     });
   } catch (error) {
-    console.error(
-      "ENGLISH CATEGORY GET ERROR:",
-      error
-    );
+    console.error("ENGLISH CATEGORY GET ERROR:", error);
 
     res.status(500).json({
       success: false,
@@ -117,16 +110,14 @@ router.get("/", async (req, res) => {
 
 router.get("/:slug", async (req, res) => {
   try {
-    const category =
-      await EnglishCategory.findOne({
-        slug: req.params.slug,
-      });
+    const category = await EnglishCategory.findOne({
+      slug: req.params.slug,
+    });
 
     if (!category) {
       return res.status(404).json({
         success: false,
-        message:
-          "English category not found",
+        message: "English category not found",
       });
     }
 
@@ -135,10 +126,7 @@ router.get("/:slug", async (req, res) => {
       data: category,
     });
   } catch (error) {
-    console.error(
-      "ENGLISH CATEGORY SINGLE ERROR:",
-      error
-    );
+    console.error("ENGLISH CATEGORY SINGLE ERROR:", error);
 
     res.status(500).json({
       success: false,

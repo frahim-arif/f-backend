@@ -6,52 +6,122 @@ require("dotenv").config();
 
 const server = express();
 
-// Middleware
-server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
-server.use(bodyParser.json());
+// =====================================================
+// MIDDLEWARE
+// =====================================================
+
 server.use(cors());
 
-// Root
+server.use(express.json());
+
+server.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+
+server.use(bodyParser.json());
+
+// =====================================================
+// ROOT
+// =====================================================
+
 server.get("/", (req, res) => {
-  res.send("Server is working fine.");
+  res.status(200).send("Server is working fine.");
 });
 
-// =========================
-// Default Routes
-// =========================
+// =====================================================
+// DEFAULT / ADMIN ROUTES
+// =====================================================
 
 require("./app/routes/admin/default.routes")(server);
+
 require("./app/routes/admin/book.routes")(server);
-require("./app/routes/admin/majmoon.routes")(server); // 👈 Majameen Route
 
-// =========================
-// Public Routes
-// =========================
+require("./app/routes/admin/majmoon.routes")(server);
 
-const questionRoutes = require("./app/routes/admin/question.routes");
-server.use("/api/questions", questionRoutes);
+// =====================================================
+// URDU ROUTES
+// =====================================================
 
-const categoryRoutes = require("./app/routes/category.routes");
-server.use("/api/categories", categoryRoutes);
+// Urdu Questions
+const questionRoutes = require(
+  "./app/routes/admin/question.routes"
+);
 
-const websiteCourseRoutes = require("./app/routes/website/course.routes");
-server.use("/api/courses", websiteCourseRoutes);
+server.use(
+  "/api/questions",
+  questionRoutes
+);
 
-// =========================
-// Admin Routes
-// =========================
 
-const adminCourseRoutes = require("./app/routes/admin/course.routes");
-server.use("/api/admin/courses", adminCourseRoutes);
+// Urdu Categories
+const categoryRoutes = require(
+  "./app/routes/category.routes"
+);
 
-const authRoutes = require("./app/routes/admin/auth.routes");
-server.use("/api/admin/auth", authRoutes);
+server.use(
+  "/api/categories",
+  categoryRoutes
+);
 
-const adminQuestionRoutes = require("./app/routes/admin/question.routes");
-server.use("/api/admin/questions", adminQuestionRoutes);
+// =====================================================
+// WEBSITE / PUBLIC ROUTES
+// =====================================================
 
-const englishQuestionRoutes = require("./app/routes/english/question.routes");
+const websiteCourseRoutes = require(
+  "./app/routes/website/course.routes"
+);
+
+server.use(
+  "/api/courses",
+  websiteCourseRoutes
+);
+
+// =====================================================
+// ADMIN ROUTES
+// =====================================================
+
+// Admin Courses
+const adminCourseRoutes = require(
+  "./app/routes/admin/course.routes"
+);
+
+server.use(
+  "/api/admin/courses",
+  adminCourseRoutes
+);
+
+
+// Admin Authentication
+const authRoutes = require(
+  "./app/routes/admin/auth.routes"
+);
+
+server.use(
+  "/api/admin/auth",
+  authRoutes
+);
+
+
+// Admin Questions
+const adminQuestionRoutes = require(
+  "./app/routes/admin/question.routes"
+);
+
+server.use(
+  "/api/admin/questions",
+  adminQuestionRoutes
+);
+
+// =====================================================
+// ENGLISH ROUTES
+// =====================================================
+
+// English Questions
+const englishQuestionRoutes = require(
+  "./app/routes/english/question.routes"
+);
 
 server.use(
   "/api/en/questions",
@@ -59,16 +129,7 @@ server.use(
 );
 
 
-
-
-const banglaQuestionRoutes = require("./app/routes/bangla/question.routes");
-
-server.use(
-  "/api/bn/questions",
-  banglaQuestionRoutes
-);
-
-
+// English Categories
 const englishCategoryRoutes = require(
   "./app/routes/english/category.routes"
 );
@@ -77,27 +138,68 @@ server.use(
   "/api/en/categories",
   englishCategoryRoutes
 );
-// =========================
-// 404 (Always Last)
-// =========================
 
-server.get("*", (req, res) => {
-  res.status(404).send("Page not found.");
+// =====================================================
+// BANGLA ROUTES
+// =====================================================
+
+// Bangla Questions
+const banglaQuestionRoutes = require(
+  "./app/routes/bangla/question.routes"
+);
+
+server.use(
+  "/api/bn/questions",
+  banglaQuestionRoutes
+);
+
+
+// Bangla Categories
+const banglaCategoryRoutes = require(
+  "./app/routes/bangla/category.routes"
+);
+
+server.use(
+  "/api/bn/categories",
+  banglaCategoryRoutes
+);
+
+// =====================================================
+// 404 - ALWAYS LAST
+// =====================================================
+
+server.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "API route not found",
+    path: req.originalUrl,
+  });
 });
 
-// =========================
-// MongoDB
-// =========================
+// =====================================================
+// MONGODB CONNECTION
+// =====================================================
+
+const MONGO_URI =
+  process.env.MONGO_URI ||
+  "mongodb://......";
 
 mongoose
-  .connect(process.env.MONGO_URI || "mongodb://......")
+  .connect(MONGO_URI)
   .then(() => {
     console.log("✅ Database Connected");
 
-    server.listen(process.env.PORT || 5000, () => {
-      console.log("🚀 Server Running");
+    const PORT = process.env.PORT || 5000;
+
+    server.listen(PORT, () => {
+      console.log(
+        `🚀 Server Running on port ${PORT}`
+      );
     });
   })
-  .catch((err) => {
-    console.log(err);
+  .catch((error) => {
+    console.error(
+      "❌ MongoDB Connection Error:",
+      error
+    );
   });
