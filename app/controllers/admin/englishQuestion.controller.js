@@ -2,88 +2,7 @@
 const EnglishQuestion = require("../../models/englishQuestion.model");
 
 // =====================================================
-// HELPER: REMOVE HTML
-// =====================================================
-
-function stripHtml(text = "") {
-  return text
-    .toString()
-    .replace(/<[^>]*>/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-// =====================================================
-// HELPER: KEYWORDS
-// =====================================================
-
-function parseKeywords(keywords) {
-  if (!keywords) return [];
-
-  if (Array.isArray(keywords)) {
-    return keywords
-      .map((keyword) => keyword.toString().trim())
-      .filter(Boolean);
-  }
-
-  return keywords
-    .toString()
-    .split(",")
-    .map((keyword) => keyword.trim())
-    .filter(Boolean);
-}
-
-// =====================================================
-// HELPER: SLUG
-// =====================================================
-
-function createSimpleSlug(text) {
-  if (!text) return "no-slug";
-
-  const slug = text
-    .toString()
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-    .split("-")
-    .filter(Boolean)
-    .slice(0, 12)
-    .join("-");
-
-  return slug || "no-slug";
-}
-
-// =====================================================
-// HELPER: UNIQUE SLUG
-// =====================================================
-
-async function makeUniqueSlug(baseSlug, id = null) {
-  const cleanBaseSlug = baseSlug || "no-slug";
-
-  let slug = cleanBaseSlug;
-  let count = 1;
-
-  while (
-    await EnglishQuestion.findOne({
-      englishSlug: slug,
-      ...(id ? { _id: { $ne: id } } : {}),
-    })
-  ) {
-    slug = `${cleanBaseSlug}-${count}`;
-    count++;
-  }
-
-  return slug;
-}
-
-// =====================================================
 // CREATE ENGLISH QUESTION
-// POST /api/en/questions
 // =====================================================
 
 exports.createEnglishQuestion = async (req, res) => {
@@ -94,16 +13,12 @@ exports.createEnglishQuestion = async (req, res) => {
       englishHawala1,
       englishHawala2,
       englishHawala3,
-      category,
       englishSlug,
       englishMetaTitle,
       englishMetaDescription,
       englishKeywords,
+      category,
     } = req.body;
-
-    // ---------------------------------------------
-    // VALIDATION
-    // ---------------------------------------------
 
     if (!englishQuestion?.trim()) {
       return res.status(400).json({
@@ -119,74 +34,59 @@ exports.createEnglishQuestion = async (req, res) => {
       });
     }
 
-    if (!category?.trim()) {
+    if (!category) {
       return res.status(400).json({
         success: false,
-        message: "English category is required",
+        message: "Category is required",
       });
     }
 
-    // ---------------------------------------------
-    // SLUG
-    // ---------------------------------------------
+    let slug =
+      englishSlug?.trim() ||
+      englishQuestion
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-");
 
-    const baseSlug = createSimpleSlug(
-      englishSlug ||
-        englishMetaTitle ||
-        englishQuestion
-    );
+    // Unique slug
+    let finalSlug = slug;
+    let count = 1;
 
-    const finalSlug = await makeUniqueSlug(baseSlug);
+    while (await EnglishQuestion.findOne({ englishSlug: finalSlug })) {
+      finalSlug = `${slug}-${count}`;
+      count++;
+    }
 
-    // ---------------------------------------------
-    // KEYWORDS
-    // ---------------------------------------------
+    const keywordArray = Array.isArray(englishKeywords)
+      ? englishKeywords
+      : (englishKeywords || "")
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean);
 
-    const keywordArray = parseKeywords(
-      englishKeywords
-    );
-
-    // ---------------------------------------------
-    // META DESCRIPTION
-    // ---------------------------------------------
-
-    const metaDescription =
-      englishMetaDescription?.trim() ||
-      stripHtml(englishAnswer).slice(0, 155);
-
-    // ---------------------------------------------
-    // CREATE
-    // ---------------------------------------------
-
-    const question = new EnglishQuestion({
+    const question = await EnglishQuestion.create({
       englishQuestion: englishQuestion.trim(),
-
       englishAnswer: englishAnswer.trim(),
 
-      englishHawala1:
-        englishHawala1?.trim() || "",
-
-      englishHawala2:
-        englishHawala2?.trim() || "",
-
-      englishHawala3:
-        englishHawala3?.trim() || "",
+      englishHawala1: englishHawala1 || "",
+      englishHawala2: englishHawala2 || "",
+      englishHawala3: englishHawala3 || "",
 
       englishSlug: finalSlug,
 
       englishMetaTitle:
-        englishMetaTitle?.trim() ||
-        englishQuestion.trim(),
+        englishMetaTitle?.trim() || englishQuestion.trim(),
 
       englishMetaDescription:
-        metaDescription,
+        englishMetaDescription?.trim() ||
+        englishAnswer.replace(/<[^>]*>/g, "").slice(0, 155),
 
       englishKeywords: keywordArray,
 
-      category: category.trim(),
+      category,
     });
-
-    await question.save();
 
     return res.status(201).json({
       success: true,
@@ -194,10 +94,7 @@ exports.createEnglishQuestion = async (req, res) => {
       data: question,
     });
   } catch (error) {
-    console.error(
-      "❌ ENGLISH CREATE ERROR:",
-      error
-    );
+    console.error("❌ ENGLISH CREATE ERROR:", error);
 
     return res.status(500).json({
       success: false,
@@ -206,67 +103,51 @@ exports.createEnglishQuestion = async (req, res) => {
   }
 };
 
+
 // =====================================================
 // GET ALL ENGLISH QUESTIONS
-// GET /api/en/questions
 // =====================================================
 
 exports.getEnglishQuestions = async (req, res) => {
   try {
-    const limit =
-      parseInt(req.query.limit) || 10;
-
-    const skip =
-      parseInt(req.query.skip) || 0;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = parseInt(req.query.skip) || 0;
 
     const questions = await EnglishQuestion.find()
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);
-
-    const total =
-      await EnglishQuestion.countDocuments();
+      .limit(limit)
+      .populate("category");
 
     return res.json({
       success: true,
       data: questions,
-      total,
-      limit,
-      skip,
     });
   } catch (error) {
-    console.error(
-      "❌ ENGLISH GET ERROR:",
-      error
-    );
+    console.error("❌ ENGLISH GET ERROR:", error);
 
     return res.status(500).json({
       success: false,
-      data: [],
       message: error.message,
     });
   }
 };
 
+
 // =====================================================
 // GET ENGLISH QUESTION BY SLUG
-// GET /api/en/questions/slug/:slug
 // =====================================================
 
-exports.getEnglishQuestionBySlug = async (
-  req,
-  res
-) => {
+exports.getEnglishQuestionBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
 
-    const question =
-      await EnglishQuestion.findOne({
-        $or: [
-          { englishSlug: slug },
-          { oldEnglishSlugs: slug },
-        ],
-      });
+    const question = await EnglishQuestion.findOne({
+      $or: [
+        { englishSlug: slug },
+        { oldEnglishSlugs: slug },
+      ],
+    }).populate("category");
 
     if (!question) {
       return res.status(404).json({
@@ -280,10 +161,7 @@ exports.getEnglishQuestionBySlug = async (
       data: question,
     });
   } catch (error) {
-    console.error(
-      "❌ ENGLISH SLUG ERROR:",
-      error
-    );
+    console.error("❌ ENGLISH SLUG ERROR:", error);
 
     return res.status(500).json({
       success: false,
@@ -292,20 +170,16 @@ exports.getEnglishQuestionBySlug = async (
   }
 };
 
+
 // =====================================================
 // UPDATE ENGLISH QUESTION
-// PUT /api/en/questions/:id
 // =====================================================
 
-exports.updateEnglishQuestion = async (
-  req,
-  res
-) => {
+exports.updateEnglishQuestion = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
 
-    const existing =
-      await EnglishQuestion.findById(id);
+    const existing = await EnglishQuestion.findById(id);
 
     if (!existing) {
       return res.status(404).json({
@@ -314,35 +188,82 @@ exports.updateEnglishQuestion = async (
       });
     }
 
-    // ---------------------------------------------
-    // SLUG
-    // ---------------------------------------------
+    const {
+      englishQuestion,
+      englishAnswer,
+      englishHawala1,
+      englishHawala2,
+      englishHawala3,
+      englishSlug,
+      englishMetaTitle,
+      englishMetaDescription,
+      englishKeywords,
+      category,
+    } = req.body;
 
-    if (
-      req.body.englishQuestion ||
-      req.body.englishSlug ||
-      req.body.englishMetaTitle
-    ) {
-      const baseSlug = createSimpleSlug(
-        req.body.englishSlug ||
-          req.body.englishMetaTitle ||
-          req.body.englishQuestion ||
-          existing.englishQuestion
-      );
+    if (englishQuestion !== undefined) {
+      existing.englishQuestion = englishQuestion.trim();
+    }
 
-      const newSlug =
-        await makeUniqueSlug(
-          baseSlug,
-          id
-        );
+    if (englishAnswer !== undefined) {
+      existing.englishAnswer = englishAnswer;
+    }
 
-      // Save old slug
+    if (englishHawala1 !== undefined)
+      existing.englishHawala1 = englishHawala1;
+
+    if (englishHawala2 !== undefined)
+      existing.englishHawala2 = englishHawala2;
+
+    if (englishHawala3 !== undefined)
+      existing.englishHawala3 = englishHawala3;
+
+    if (category !== undefined)
+      existing.category = category;
+
+    if (englishMetaTitle !== undefined)
+      existing.englishMetaTitle = englishMetaTitle;
+
+    if (englishMetaDescription !== undefined)
+      existing.englishMetaDescription = englishMetaDescription;
+
+    if (englishKeywords !== undefined) {
+      existing.englishKeywords = Array.isArray(englishKeywords)
+        ? englishKeywords
+        : englishKeywords
+            .split(",")
+            .map((item) => item.trim())
+            .filter(Boolean);
+    }
+
+    if (englishSlug !== undefined && englishSlug.trim()) {
+      let slug = englishSlug
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-");
+
+      let finalSlug = slug;
+      let count = 1;
+
+      while (
+        await EnglishQuestion.findOne({
+          englishSlug: finalSlug,
+          _id: { $ne: id },
+        })
+      ) {
+        finalSlug = `${slug}-${count}`;
+        count++;
+      }
+
       if (
         existing.englishSlug &&
-        existing.englishSlug !== newSlug
+        existing.englishSlug !== finalSlug
       ) {
-        existing.oldEnglishSlugs =
-          existing.oldEnglishSlugs || [];
+        if (!existing.oldEnglishSlugs) {
+          existing.oldEnglishSlugs = [];
+        }
 
         if (
           !existing.oldEnglishSlugs.includes(
@@ -355,70 +276,18 @@ exports.updateEnglishQuestion = async (
         }
       }
 
-      req.body.englishSlug = newSlug;
+      existing.englishSlug = finalSlug;
     }
-
-    // ---------------------------------------------
-    // KEYWORDS
-    // ---------------------------------------------
-
-    if (
-      req.body.englishKeywords !== undefined
-    ) {
-      req.body.englishKeywords =
-        parseKeywords(
-          req.body.englishKeywords
-        );
-    }
-
-    // ---------------------------------------------
-    // META DESCRIPTION
-    // ---------------------------------------------
-
-    if (
-      !req.body.englishMetaDescription &&
-      req.body.englishAnswer
-    ) {
-      req.body.englishMetaDescription =
-        stripHtml(
-          req.body.englishAnswer
-        ).slice(0, 155);
-    }
-
-    // ---------------------------------------------
-    // META TITLE
-    // ---------------------------------------------
-
-    if (
-      !req.body.englishMetaTitle &&
-      req.body.englishQuestion
-    ) {
-      req.body.englishMetaTitle =
-        req.body.englishQuestion;
-    }
-
-    // ---------------------------------------------
-    // UPDATE
-    // ---------------------------------------------
-
-    Object.assign(
-      existing,
-      req.body
-    );
 
     await existing.save();
 
     return res.json({
       success: true,
-      message:
-        "English question updated successfully",
+      message: "English question updated successfully",
       data: existing,
     });
   } catch (error) {
-    console.error(
-      "❌ ENGLISH UPDATE ERROR:",
-      error
-    );
+    console.error("❌ ENGLISH UPDATE ERROR:", error);
 
     return res.status(500).json({
       success: false,
@@ -427,20 +296,16 @@ exports.updateEnglishQuestion = async (
   }
 };
 
+
 // =====================================================
 // DELETE ENGLISH QUESTION
-// DELETE /api/en/questions/:id
 // =====================================================
 
-exports.deleteEnglishQuestion = async (
-  req,
-  res
-) => {
+exports.deleteEnglishQuestion = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
 
-    const question =
-      await EnglishQuestion.findById(id);
+    const question = await EnglishQuestion.findById(id);
 
     if (!question) {
       return res.status(404).json({
@@ -453,14 +318,10 @@ exports.deleteEnglishQuestion = async (
 
     return res.json({
       success: true,
-      message:
-        "English question deleted successfully",
+      message: "English question deleted successfully",
     });
   } catch (error) {
-    console.error(
-      "❌ ENGLISH DELETE ERROR:",
-      error
-    );
+    console.error("❌ ENGLISH DELETE ERROR:", error);
 
     return res.status(500).json({
       success: false,

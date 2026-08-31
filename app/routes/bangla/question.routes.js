@@ -1,12 +1,14 @@
+
 const express = require("express");
 
 const router = express.Router();
 
-const questionController = require("../../controllers/admin/question.controller");
+// ✅ Separate Bangla Controller
+const questionController = require("../../controllers/admin/banglaQuestion.controller");
 
 // =====================================================
 // CREATE BANGLA QUESTION
-// POST /api/admin/questions/bangla
+// POST /api/bn/questions
 // =====================================================
 
 router.post(
@@ -16,7 +18,7 @@ router.post(
 
 // =====================================================
 // GET ALL BANGLA QUESTIONS
-// GET /api/admin/questions/bangla
+// GET /api/bn/questions
 // =====================================================
 
 router.get(
@@ -26,7 +28,7 @@ router.get(
 
 // =====================================================
 // GET BANGLA QUESTION BY SLUG
-// GET /api/admin/questions/bangla/slug/:slug
+// GET /api/bn/questions/slug/:slug
 // =====================================================
 
 router.get(
@@ -36,7 +38,7 @@ router.get(
 
 // =====================================================
 // UPDATE BANGLA QUESTION
-// PUT /api/admin/questions/bangla/:id
+// PUT /api/bn/questions/:id
 // =====================================================
 
 router.put(
@@ -45,8 +47,8 @@ router.put(
 );
 
 // =====================================================
-// DELETE BANGLA QUESTION DATA
-// DELETE /api/admin/questions/bangla/:id
+// DELETE BANGLA QUESTION
+// DELETE /api/bn/questions/:id
 // =====================================================
 
 router.delete(
@@ -55,3 +57,4 @@ router.delete(
 );
 
 module.exports = router;
+

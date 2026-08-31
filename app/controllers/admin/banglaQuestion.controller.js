@@ -86,10 +86,7 @@ async function makeUniqueSlug(baseSlug, id = null) {
 // POST /api/bn/questions
 // =====================================================
 
-exports.createBanglaQuestion = async (
-  req,
-  res
-) => {
+exports.createBanglaQuestion = async (req, res) => {
   try {
     const {
       banglaQuestion,
@@ -111,24 +108,21 @@ exports.createBanglaQuestion = async (
     if (!banglaQuestion?.trim()) {
       return res.status(400).json({
         success: false,
-        message:
-          "Bangla question is required",
+        message: "Bangla question is required",
       });
     }
 
     if (!banglaAnswer?.trim()) {
       return res.status(400).json({
         success: false,
-        message:
-          "Bangla answer is required",
+        message: "Bangla answer is required",
       });
     }
 
     if (!category?.trim()) {
       return res.status(400).json({
         success: false,
-        message:
-          "Bangla category is required",
+        message: "Bangla category is required",
       });
     }
 
@@ -142,17 +136,15 @@ exports.createBanglaQuestion = async (
         banglaQuestion
     );
 
-    const finalSlug =
-      await makeUniqueSlug(baseSlug);
+    const finalSlug = await makeUniqueSlug(baseSlug);
 
     // ---------------------------------------------
     // KEYWORDS
     // ---------------------------------------------
 
-    const keywordArray =
-      parseKeywords(
-        banglaKeywords
-      );
+    const keywordArray = parseKeywords(
+      banglaKeywords
+    );
 
     // ---------------------------------------------
     // META DESCRIPTION
@@ -167,11 +159,9 @@ exports.createBanglaQuestion = async (
     // ---------------------------------------------
 
     const question = new BanglaQuestion({
-      banglaQuestion:
-        banglaQuestion.trim(),
+      banglaQuestion: banglaQuestion.trim(),
 
-      banglaAnswer:
-        banglaAnswer.trim(),
+      banglaAnswer: banglaAnswer.trim(),
 
       banglaHawala1:
         banglaHawala1?.trim() || "",
@@ -182,8 +172,7 @@ exports.createBanglaQuestion = async (
       banglaHawala3:
         banglaHawala3?.trim() || "",
 
-      banglaSlug:
-        finalSlug,
+      banglaSlug: finalSlug,
 
       banglaMetaTitle:
         banglaMetaTitle?.trim() ||
@@ -195,16 +184,14 @@ exports.createBanglaQuestion = async (
       banglaKeywords:
         keywordArray,
 
-      category:
-        category.trim(),
+      category: category.trim(),
     });
 
     await question.save();
 
     return res.status(201).json({
       success: true,
-      message:
-        "Bangla question added successfully",
+      message: "Bangla question added successfully",
       data: question,
     });
   } catch (error) {
@@ -225,10 +212,7 @@ exports.createBanglaQuestion = async (
 // GET /api/bn/questions
 // =====================================================
 
-exports.getBanglaQuestions = async (
-  req,
-  res
-) => {
+exports.getBanglaQuestions = async (req, res) => {
   try {
     const limit =
       parseInt(req.query.limit) || 10;
@@ -289,8 +273,7 @@ exports.getBanglaQuestionBySlug = async (
     if (!question) {
       return res.status(404).json({
         success: false,
-        message:
-          "Bangla question not found",
+        message: "Bangla question not found",
       });
     }
 
@@ -329,8 +312,7 @@ exports.updateBanglaQuestion = async (
     if (!existing) {
       return res.status(404).json({
         success: false,
-        message:
-          "Bangla question not found",
+        message: "Bangla question not found",
       });
     }
 
@@ -376,8 +358,7 @@ exports.updateBanglaQuestion = async (
         }
       }
 
-      req.body.banglaSlug =
-        newSlug;
+      req.body.banglaSlug = newSlug;
     }
 
     // ---------------------------------------------
@@ -385,8 +366,7 @@ exports.updateBanglaQuestion = async (
     // ---------------------------------------------
 
     if (
-      req.body.banglaKeywords !==
-      undefined
+      req.body.banglaKeywords !== undefined
     ) {
       req.body.banglaKeywords =
         parseKeywords(

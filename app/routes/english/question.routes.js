@@ -1,12 +1,14 @@
+
 const express = require("express");
 
 const router = express.Router();
 
-const questionController = require("../../controllers/admin/question.controller");
+// ✅ English ka ALAG controller
+const questionController = require("../../controllers/admin/englishQuestion.controller");
 
 // =====================================================
 // CREATE ENGLISH QUESTION
-// POST /api/admin/questions/english
+// POST /api/en/questions
 // =====================================================
 
 router.post(
@@ -16,7 +18,7 @@ router.post(
 
 // =====================================================
 // GET ALL ENGLISH QUESTIONS
-// GET /api/admin/questions/english
+// GET /api/en/questions
 // =====================================================
 
 router.get(
@@ -26,7 +28,7 @@ router.get(
 
 // =====================================================
 // GET ENGLISH QUESTION BY SLUG
-// GET /api/admin/questions/english/slug/:slug
+// GET /api/en/questions/slug/:slug
 // =====================================================
 
 router.get(
@@ -36,7 +38,7 @@ router.get(
 
 // =====================================================
 // UPDATE ENGLISH QUESTION
-// PUT /api/admin/questions/english/:id
+// PUT /api/en/questions/:id
 // =====================================================
 
 router.put(
@@ -45,8 +47,8 @@ router.put(
 );
 
 // =====================================================
-// DELETE ENGLISH QUESTION DATA
-// DELETE /api/admin/questions/english/:id
+// DELETE ENGLISH QUESTION
+// DELETE /api/en/questions/:id
 // =====================================================
 
 router.delete(
@@ -55,3 +57,4 @@ router.delete(
 );
 
 module.exports = router;
+
