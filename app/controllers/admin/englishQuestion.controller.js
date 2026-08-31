@@ -2,10 +2,9 @@
 const EnglishQuestion = require("../../models/englishQuestion.model");
 
 // =====================================================
-// HELPER FUNCTIONS
+// HELPER: REMOVE HTML
 // =====================================================
 
-// Remove HTML tags
 function stripHtml(text = "") {
   return text
     .toString()
@@ -14,7 +13,10 @@ function stripHtml(text = "") {
     .trim();
 }
 
-// Convert keywords into array
+// =====================================================
+// HELPER: KEYWORDS
+// =====================================================
+
 function parseKeywords(keywords) {
   if (!keywords) return [];
 
@@ -32,10 +34,10 @@ function parseKeywords(keywords) {
 }
 
 // =====================================================
-// SLUG GENERATOR
+// HELPER: SLUG
 // =====================================================
 
-function createSlug(text) {
+function createSimpleSlug(text) {
   if (!text) return "no-slug";
 
   const slug = text
@@ -57,7 +59,7 @@ function createSlug(text) {
 }
 
 // =====================================================
-// UNIQUE SLUG
+// HELPER: UNIQUE SLUG
 // =====================================================
 
 async function makeUniqueSlug(baseSlug, id = null) {
@@ -68,7 +70,7 @@ async function makeUniqueSlug(baseSlug, id = null) {
 
   while (
     await EnglishQuestion.findOne({
-      slug,
+      englishSlug: slug,
       ...(id ? { _id: { $ne: id } } : {}),
     })
   ) {
@@ -81,91 +83,121 @@ async function makeUniqueSlug(baseSlug, id = null) {
 
 // =====================================================
 // CREATE ENGLISH QUESTION
+// POST /api/en/questions
 // =====================================================
 
 exports.createEnglishQuestion = async (req, res) => {
   try {
     const {
-      question,
-      answer,
-      hawala1,
-      hawala2,
-      hawala3,
+      englishQuestion,
+      englishAnswer,
+      englishHawala1,
+      englishHawala2,
+      englishHawala3,
       category,
-      metaTitle,
-      metaDescription,
-      keywords,
-      slug,
+      englishSlug,
+      englishMetaTitle,
+      englishMetaDescription,
+      englishKeywords,
     } = req.body;
 
-    // Validation
-    if (!question?.trim()) {
+    // ---------------------------------------------
+    // VALIDATION
+    // ---------------------------------------------
+
+    if (!englishQuestion?.trim()) {
       return res.status(400).json({
         success: false,
         message: "English question is required",
       });
     }
 
-    if (!answer?.trim()) {
+    if (!englishAnswer?.trim()) {
       return res.status(400).json({
         success: false,
         message: "English answer is required",
       });
     }
 
-    if (!category) {
+    if (!category?.trim()) {
       return res.status(400).json({
         success: false,
-        message: "Category is required",
+        message: "English category is required",
       });
     }
 
-    // Slug
-    const baseSlug = createSlug(
-      slug || metaTitle || question
+    // ---------------------------------------------
+    // SLUG
+    // ---------------------------------------------
+
+    const baseSlug = createSimpleSlug(
+      englishSlug ||
+        englishMetaTitle ||
+        englishQuestion
     );
 
     const finalSlug = await makeUniqueSlug(baseSlug);
 
-    // Keywords
-    const keywordArray = parseKeywords(keywords);
+    // ---------------------------------------------
+    // KEYWORDS
+    // ---------------------------------------------
 
-    // Meta description
-    const finalMetaDescription =
-      metaDescription?.trim() ||
-      stripHtml(answer).slice(0, 155);
+    const keywordArray = parseKeywords(
+      englishKeywords
+    );
 
-    // Create
-    const englishQuestion = new EnglishQuestion({
-      question: question.trim(),
+    // ---------------------------------------------
+    // META DESCRIPTION
+    // ---------------------------------------------
 
-      answer,
+    const metaDescription =
+      englishMetaDescription?.trim() ||
+      stripHtml(englishAnswer).slice(0, 155);
 
-      hawala1: hawala1 || "",
-      hawala2: hawala2 || "",
-      hawala3: hawala3 || "",
+    // ---------------------------------------------
+    // CREATE
+    // ---------------------------------------------
 
-      category,
+    const question = new EnglishQuestion({
+      englishQuestion: englishQuestion.trim(),
 
-      slug: finalSlug,
+      englishAnswer: englishAnswer.trim(),
 
-      metaTitle:
-        metaTitle?.trim() || question.trim(),
+      englishHawala1:
+        englishHawala1?.trim() || "",
 
-      metaDescription: finalMetaDescription,
+      englishHawala2:
+        englishHawala2?.trim() || "",
 
-      keywords: keywordArray,
+      englishHawala3:
+        englishHawala3?.trim() || "",
+
+      englishSlug: finalSlug,
+
+      englishMetaTitle:
+        englishMetaTitle?.trim() ||
+        englishQuestion.trim(),
+
+      englishMetaDescription:
+        metaDescription,
+
+      englishKeywords: keywordArray,
+
+      category: category.trim(),
     });
 
-    await englishQuestion.save();
+    await question.save();
 
     return res.status(201).json({
       success: true,
       message: "English question added successfully",
-      data: englishQuestion,
+      data: question,
     });
   } catch (error) {
-    console.error("❌ ENGLISH CREATE ERROR:", error);
+    console.error(
+      "❌ ENGLISH CREATE ERROR:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -176,6 +208,7 @@ exports.createEnglishQuestion = async (req, res) => {
 
 // =====================================================
 // GET ALL ENGLISH QUESTIONS
+// GET /api/en/questions
 // =====================================================
 
 exports.getEnglishQuestions = async (req, res) => {
@@ -189,8 +222,7 @@ exports.getEnglishQuestions = async (req, res) => {
     const questions = await EnglishQuestion.find()
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit)
-      .populate("category");
+      .limit(limit);
 
     const total =
       await EnglishQuestion.countDocuments();
@@ -199,12 +231,18 @@ exports.getEnglishQuestions = async (req, res) => {
       success: true,
       data: questions,
       total,
+      limit,
+      skip,
     });
   } catch (error) {
-    console.error("❌ ENGLISH GET ERROR:", error);
+    console.error(
+      "❌ ENGLISH GET ERROR:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
+      data: [],
       message: error.message,
     });
   }
@@ -212,6 +250,7 @@ exports.getEnglishQuestions = async (req, res) => {
 
 // =====================================================
 // GET ENGLISH QUESTION BY SLUG
+// GET /api/en/questions/slug/:slug
 // =====================================================
 
 exports.getEnglishQuestionBySlug = async (
@@ -224,10 +263,10 @@ exports.getEnglishQuestionBySlug = async (
     const question =
       await EnglishQuestion.findOne({
         $or: [
-          { slug },
-          { oldSlugs: slug },
+          { englishSlug: slug },
+          { oldEnglishSlugs: slug },
         ],
-      }).populate("category");
+      });
 
     if (!question) {
       return res.status(404).json({
@@ -255,6 +294,7 @@ exports.getEnglishQuestionBySlug = async (
 
 // =====================================================
 // UPDATE ENGLISH QUESTION
+// PUT /api/en/questions/:id
 // =====================================================
 
 exports.updateEnglishQuestion = async (
@@ -279,15 +319,15 @@ exports.updateEnglishQuestion = async (
     // ---------------------------------------------
 
     if (
-      req.body.question ||
-      req.body.slug ||
-      req.body.metaTitle
+      req.body.englishQuestion ||
+      req.body.englishSlug ||
+      req.body.englishMetaTitle
     ) {
-      const baseSlug = createSlug(
-        req.body.slug ||
-        req.body.metaTitle ||
-        req.body.question ||
-        existing.question
+      const baseSlug = createSimpleSlug(
+        req.body.englishSlug ||
+          req.body.englishMetaTitle ||
+          req.body.englishQuestion ||
+          existing.englishQuestion
       );
 
       const newSlug =
@@ -296,25 +336,26 @@ exports.updateEnglishQuestion = async (
           id
         );
 
+      // Save old slug
       if (
-        existing.slug &&
-        existing.slug !== newSlug
+        existing.englishSlug &&
+        existing.englishSlug !== newSlug
       ) {
-        existing.oldSlugs =
-          existing.oldSlugs || [];
+        existing.oldEnglishSlugs =
+          existing.oldEnglishSlugs || [];
 
         if (
-          !existing.oldSlugs.includes(
-            existing.slug
+          !existing.oldEnglishSlugs.includes(
+            existing.englishSlug
           )
         ) {
-          existing.oldSlugs.push(
-            existing.slug
+          existing.oldEnglishSlugs.push(
+            existing.englishSlug
           );
         }
       }
 
-      req.body.slug = newSlug;
+      req.body.englishSlug = newSlug;
     }
 
     // ---------------------------------------------
@@ -322,11 +363,11 @@ exports.updateEnglishQuestion = async (
     // ---------------------------------------------
 
     if (
-      req.body.keywords !== undefined
+      req.body.englishKeywords !== undefined
     ) {
-      req.body.keywords =
+      req.body.englishKeywords =
         parseKeywords(
-          req.body.keywords
+          req.body.englishKeywords
         );
     }
 
@@ -335,12 +376,12 @@ exports.updateEnglishQuestion = async (
     // ---------------------------------------------
 
     if (
-      !req.body.metaDescription &&
-      req.body.answer
+      !req.body.englishMetaDescription &&
+      req.body.englishAnswer
     ) {
-      req.body.metaDescription =
+      req.body.englishMetaDescription =
         stripHtml(
-          req.body.answer
+          req.body.englishAnswer
         ).slice(0, 155);
     }
 
@@ -349,12 +390,16 @@ exports.updateEnglishQuestion = async (
     // ---------------------------------------------
 
     if (
-      !req.body.metaTitle &&
-      req.body.question
+      !req.body.englishMetaTitle &&
+      req.body.englishQuestion
     ) {
-      req.body.metaTitle =
-        req.body.question;
+      req.body.englishMetaTitle =
+        req.body.englishQuestion;
     }
+
+    // ---------------------------------------------
+    // UPDATE
+    // ---------------------------------------------
 
     Object.assign(
       existing,
@@ -384,6 +429,7 @@ exports.updateEnglishQuestion = async (
 
 // =====================================================
 // DELETE ENGLISH QUESTION
+// DELETE /api/en/questions/:id
 // =====================================================
 
 exports.deleteEnglishQuestion = async (

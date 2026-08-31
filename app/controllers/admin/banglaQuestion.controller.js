@@ -2,7 +2,7 @@
 const BanglaQuestion = require("../../models/banglaQuestion.model");
 
 // =====================================================
-// HELPER FUNCTIONS
+// HELPER: REMOVE HTML
 // =====================================================
 
 function stripHtml(text = "") {
@@ -12,6 +12,10 @@ function stripHtml(text = "") {
     .replace(/\s+/g, " ")
     .trim();
 }
+
+// =====================================================
+// HELPER: KEYWORDS
+// =====================================================
 
 function parseKeywords(keywords) {
   if (!keywords) return [];
@@ -30,10 +34,10 @@ function parseKeywords(keywords) {
 }
 
 // =====================================================
-// SLUG
+// HELPER: SLUG
 // =====================================================
 
-function createSlug(text) {
+function createSimpleSlug(text) {
   if (!text) return "no-slug";
 
   const slug = text
@@ -55,7 +59,7 @@ function createSlug(text) {
 }
 
 // =====================================================
-// UNIQUE SLUG
+// HELPER: UNIQUE SLUG
 // =====================================================
 
 async function makeUniqueSlug(baseSlug, id = null) {
@@ -66,7 +70,7 @@ async function makeUniqueSlug(baseSlug, id = null) {
 
   while (
     await BanglaQuestion.findOne({
-      slug,
+      banglaSlug: slug,
       ...(id ? { _id: { $ne: id } } : {}),
     })
   ) {
@@ -79,6 +83,7 @@ async function makeUniqueSlug(baseSlug, id = null) {
 
 // =====================================================
 // CREATE BANGLA QUESTION
+// POST /api/bn/questions
 // =====================================================
 
 exports.createBanglaQuestion = async (
@@ -87,90 +92,120 @@ exports.createBanglaQuestion = async (
 ) => {
   try {
     const {
-      question,
-      answer,
-      hawala1,
-      hawala2,
-      hawala3,
+      banglaQuestion,
+      banglaAnswer,
+      banglaHawala1,
+      banglaHawala2,
+      banglaHawala3,
       category,
-      metaTitle,
-      metaDescription,
-      keywords,
-      slug,
+      banglaSlug,
+      banglaMetaTitle,
+      banglaMetaDescription,
+      banglaKeywords,
     } = req.body;
 
-    // Validation
-    if (!question?.trim()) {
+    // ---------------------------------------------
+    // VALIDATION
+    // ---------------------------------------------
+
+    if (!banglaQuestion?.trim()) {
       return res.status(400).json({
         success: false,
-        message: "Bangla question is required",
+        message:
+          "Bangla question is required",
       });
     }
 
-    if (!answer?.trim()) {
+    if (!banglaAnswer?.trim()) {
       return res.status(400).json({
         success: false,
-        message: "Bangla answer is required",
+        message:
+          "Bangla answer is required",
       });
     }
 
-    if (!category) {
+    if (!category?.trim()) {
       return res.status(400).json({
         success: false,
-        message: "Category is required",
+        message:
+          "Bangla category is required",
       });
     }
 
-    // Slug
-    const baseSlug = createSlug(
-      slug || metaTitle || question
+    // ---------------------------------------------
+    // SLUG
+    // ---------------------------------------------
+
+    const baseSlug = createSimpleSlug(
+      banglaSlug ||
+        banglaMetaTitle ||
+        banglaQuestion
     );
 
     const finalSlug =
       await makeUniqueSlug(baseSlug);
 
-    // Keywords
+    // ---------------------------------------------
+    // KEYWORDS
+    // ---------------------------------------------
+
     const keywordArray =
-      parseKeywords(keywords);
+      parseKeywords(
+        banglaKeywords
+      );
 
-    // Meta description
-    const finalMetaDescription =
-      metaDescription?.trim() ||
-      stripHtml(answer).slice(0, 155);
+    // ---------------------------------------------
+    // META DESCRIPTION
+    // ---------------------------------------------
 
-    // Create
-    const banglaQuestion =
-      new BanglaQuestion({
-        question: question.trim(),
+    const metaDescription =
+      banglaMetaDescription?.trim() ||
+      stripHtml(banglaAnswer).slice(0, 155);
 
-        answer,
+    // ---------------------------------------------
+    // CREATE
+    // ---------------------------------------------
 
-        hawala1: hawala1 || "",
-        hawala2: hawala2 || "",
-        hawala3: hawala3 || "",
+    const question = new BanglaQuestion({
+      banglaQuestion:
+        banglaQuestion.trim(),
 
-        category,
+      banglaAnswer:
+        banglaAnswer.trim(),
 
-        slug: finalSlug,
+      banglaHawala1:
+        banglaHawala1?.trim() || "",
 
-        metaTitle:
-          metaTitle?.trim() ||
-          question.trim(),
+      banglaHawala2:
+        banglaHawala2?.trim() || "",
 
-        metaDescription:
-          finalMetaDescription,
+      banglaHawala3:
+        banglaHawala3?.trim() || "",
 
-        keywords:
-          keywordArray,
-      });
+      banglaSlug:
+        finalSlug,
 
-    await banglaQuestion.save();
+      banglaMetaTitle:
+        banglaMetaTitle?.trim() ||
+        banglaQuestion.trim(),
+
+      banglaMetaDescription:
+        metaDescription,
+
+      banglaKeywords:
+        keywordArray,
+
+      category:
+        category.trim(),
+    });
+
+    await question.save();
 
     return res.status(201).json({
       success: true,
       message:
         "Bangla question added successfully",
-      data: banglaQuestion,
+      data: question,
     });
   } catch (error) {
     console.error(
@@ -187,6 +222,7 @@ exports.createBanglaQuestion = async (
 
 // =====================================================
 // GET ALL BANGLA QUESTIONS
+// GET /api/bn/questions
 // =====================================================
 
 exports.getBanglaQuestions = async (
@@ -204,8 +240,7 @@ exports.getBanglaQuestions = async (
       await BanglaQuestion.find()
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(limit)
-        .populate("category");
+        .limit(limit);
 
     const total =
       await BanglaQuestion.countDocuments();
@@ -214,6 +249,8 @@ exports.getBanglaQuestions = async (
       success: true,
       data: questions,
       total,
+      limit,
+      skip,
     });
   } catch (error) {
     console.error(
@@ -223,6 +260,7 @@ exports.getBanglaQuestions = async (
 
     return res.status(500).json({
       success: false,
+      data: [],
       message: error.message,
     });
   }
@@ -230,6 +268,7 @@ exports.getBanglaQuestions = async (
 
 // =====================================================
 // GET BANGLA QUESTION BY SLUG
+// GET /api/bn/questions/slug/:slug
 // =====================================================
 
 exports.getBanglaQuestionBySlug = async (
@@ -242,10 +281,10 @@ exports.getBanglaQuestionBySlug = async (
     const question =
       await BanglaQuestion.findOne({
         $or: [
-          { slug },
-          { oldSlugs: slug },
+          { banglaSlug: slug },
+          { oldBanglaSlugs: slug },
         ],
-      }).populate("category");
+      });
 
     if (!question) {
       return res.status(404).json({
@@ -274,6 +313,7 @@ exports.getBanglaQuestionBySlug = async (
 
 // =====================================================
 // UPDATE BANGLA QUESTION
+// PUT /api/bn/questions/:id
 // =====================================================
 
 exports.updateBanglaQuestion = async (
@@ -299,16 +339,16 @@ exports.updateBanglaQuestion = async (
     // ---------------------------------------------
 
     if (
-      req.body.question ||
-      req.body.slug ||
-      req.body.metaTitle
+      req.body.banglaQuestion ||
+      req.body.banglaSlug ||
+      req.body.banglaMetaTitle
     ) {
       const baseSlug =
-        createSlug(
-          req.body.slug ||
-          req.body.metaTitle ||
-          req.body.question ||
-          existing.question
+        createSimpleSlug(
+          req.body.banglaSlug ||
+            req.body.banglaMetaTitle ||
+            req.body.banglaQuestion ||
+            existing.banglaQuestion
         );
 
       const newSlug =
@@ -317,25 +357,27 @@ exports.updateBanglaQuestion = async (
           id
         );
 
+      // Save old slug
       if (
-        existing.slug &&
-        existing.slug !== newSlug
+        existing.banglaSlug &&
+        existing.banglaSlug !== newSlug
       ) {
-        existing.oldSlugs =
-          existing.oldSlugs || [];
+        existing.oldBanglaSlugs =
+          existing.oldBanglaSlugs || [];
 
         if (
-          !existing.oldSlugs.includes(
-            existing.slug
+          !existing.oldBanglaSlugs.includes(
+            existing.banglaSlug
           )
         ) {
-          existing.oldSlugs.push(
-            existing.slug
+          existing.oldBanglaSlugs.push(
+            existing.banglaSlug
           );
         }
       }
 
-      req.body.slug = newSlug;
+      req.body.banglaSlug =
+        newSlug;
     }
 
     // ---------------------------------------------
@@ -343,11 +385,12 @@ exports.updateBanglaQuestion = async (
     // ---------------------------------------------
 
     if (
-      req.body.keywords !== undefined
+      req.body.banglaKeywords !==
+      undefined
     ) {
-      req.body.keywords =
+      req.body.banglaKeywords =
         parseKeywords(
-          req.body.keywords
+          req.body.banglaKeywords
         );
     }
 
@@ -356,12 +399,12 @@ exports.updateBanglaQuestion = async (
     // ---------------------------------------------
 
     if (
-      !req.body.metaDescription &&
-      req.body.answer
+      !req.body.banglaMetaDescription &&
+      req.body.banglaAnswer
     ) {
-      req.body.metaDescription =
+      req.body.banglaMetaDescription =
         stripHtml(
-          req.body.answer
+          req.body.banglaAnswer
         ).slice(0, 155);
     }
 
@@ -370,12 +413,16 @@ exports.updateBanglaQuestion = async (
     // ---------------------------------------------
 
     if (
-      !req.body.metaTitle &&
-      req.body.question
+      !req.body.banglaMetaTitle &&
+      req.body.banglaQuestion
     ) {
-      req.body.metaTitle =
-        req.body.question;
+      req.body.banglaMetaTitle =
+        req.body.banglaQuestion;
     }
+
+    // ---------------------------------------------
+    // UPDATE
+    // ---------------------------------------------
 
     Object.assign(
       existing,
@@ -405,6 +452,7 @@ exports.updateBanglaQuestion = async (
 
 // =====================================================
 // DELETE BANGLA QUESTION
+// DELETE /api/bn/questions/:id
 // =====================================================
 
 exports.deleteBanglaQuestion = async (
@@ -444,3 +492,4 @@ exports.deleteBanglaQuestion = async (
     });
   }
 };
+
