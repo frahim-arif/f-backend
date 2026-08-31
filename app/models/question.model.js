@@ -46,6 +46,7 @@
 
 
 
+
 const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema(
@@ -78,6 +79,37 @@ const questionSchema = new mongoose.Schema(
     hawala3: {
       type: String,
       default: "",
+    },
+
+    // =====================================================
+    // URDU SEO
+    // =====================================================
+
+    slug: {
+      type: String,
+      trim: true,
+      default: undefined,
+      sparse: true,
+    },
+
+    metaTitle: {
+      type: String,
+      default: "",
+    },
+
+    metaDescription: {
+      type: String,
+      default: "",
+    },
+
+    keywords: {
+      type: [String],
+      default: [],
+    },
+
+    oldSlugs: {
+      type: [String],
+      default: [],
     },
 
     // =====================================================
@@ -205,30 +237,6 @@ const questionSchema = new mongoose.Schema(
       ref: "Category",
       default: null,
     },
-
-    // =====================================================
-    // URDU SEO
-    // =====================================================
-
-    metaTitle: {
-      type: String,
-      default: "",
-    },
-
-    metaDescription: {
-      type: String,
-      default: "",
-    },
-
-    keywords: {
-      type: [String],
-      default: [],
-    },
-
-    oldSlugs: {
-      type: [String],
-      default: [],
-    },
   },
   {
     timestamps: true,
@@ -236,4 +244,5 @@ const questionSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Question", questionSchema);
+
 
