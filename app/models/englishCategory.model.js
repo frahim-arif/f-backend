@@ -15,11 +15,6 @@ const englishCategorySchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
-
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
   {
     timestamps: true,
