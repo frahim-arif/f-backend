@@ -52,65 +52,69 @@ const mongoose = require("mongoose");
 const questionSchema = new mongoose.Schema(
   {
     // =====================================================
-    // ORIGINAL / URDU
-    // =====================================================
+// ORIGINAL / URDU
+// =====================================================
 
-    question: {
-      type: String,
-      trim: true,
-      default: "",
-    },
+question: {
+  type: String,
+  required: true,
+  trim: true,
+},
 
-    answer: {
-      type: String,
-      default: "",
-    },
+answer: {
+  type: String,
+  required: true,
+},
 
-    hawala1: {
-      type: String,
-      default: "",
-    },
+hawala1: {
+  type: String,
+},
 
-    hawala2: {
-      type: String,
-      default: "",
-    },
+hawala2: {
+  type: String,
+},
 
-    hawala3: {
-      type: String,
-      default: "",
-    },
+hawala3: {
+  type: String,
+},
 
-    // =====================================================
-    // URDU SEO
-    // =====================================================
+category: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Category",
+  required: true,
+},
 
-    slug: {
-      type: String,
-      trim: true,
-      default: undefined,
-      sparse: true,
-    },
+// =====================================================
+// URDU SEO
+// =====================================================
 
-    metaTitle: {
-      type: String,
-      default: "",
-    },
+slug: {
+  type: String,
+  unique: true,
+  lowercase: true,
+  trim: true,
+  index: true,
+},
 
-    metaDescription: {
-      type: String,
-      default: "",
-    },
+metaTitle: {
+  type: String,
+  default: "",
+},
 
-    keywords: {
-      type: [String],
-      default: [],
-    },
+metaDescription: {
+  type: String,
+  default: "",
+},
 
-    oldSlugs: {
-      type: [String],
-      default: [],
-    },
+keywords: {
+  type: [String],
+  default: [],
+},
+
+oldSlugs: {
+  type: [String],
+  default: [],
+},
 
     // =====================================================
     // ENGLISH

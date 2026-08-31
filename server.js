@@ -74,7 +74,6 @@ server.get("*", (req, res) => {
   res.status(404).send("Page not found.");
 });
 
-
 // =========================
 // MongoDB
 // =========================
@@ -83,14 +82,11 @@ mongoose
   .connect(process.env.MONGO_URI || "mongodb://......")
   .then(() => {
     console.log("✅ Database Connected");
-    console.log("📦 Database Name:", mongoose.connection.name);
-    console.log("📚 Question Collection:", mongoose.connection.collection("questions").collectionName);
 
     server.listen(process.env.PORT || 5000, () => {
-      console.log("🚀 Server Running on port", process.env.PORT || 5000);
+      console.log("🚀 Server Running");
     });
   })
   .catch((err) => {
-    console.error("❌ MongoDB Connection Error:", err);
+    console.log(err);
   });
-
