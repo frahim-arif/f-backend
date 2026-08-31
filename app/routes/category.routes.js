@@ -1,67 +1,210 @@
 
-
-
 const express = require("express");
 const mongoose = require("mongoose");
+
 const router = express.Router();
 
-// ✅ Category Schema
+// =====================================================
+// CATEGORY SCHEMA
+// =====================================================
+
 const categorySchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  slug: { type: String, required: true, unique: true },
-  createdAt: { type: Date, default: Date.now },
+  // Urdu
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
+  // English
+  englishName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
+  // Bangla
+  banglaName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
+  // Common slug
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const Category = mongoose.models.Category || mongoose.model("Category", categorySchema);
+const Category =
+  mongoose.models.Category ||
+  mongoose.model("Category", categorySchema);
 
-// ✅ Seed Default Categories
+// =====================================================
+// SEED DEFAULT CATEGORIES
+// =====================================================
+
 router.get("/seed", async (req, res) => {
   try {
     const defaultCategories = [
-      { name: "جدید مسائل", slug: "jadeed-masail" },
-      { name: "نماز", slug: "namaz" },
-      { name: "حج", slug: "hajj" },
-      { name: "زکوٰۃ", slug: "zakat" },
-      { name: "قربانی", slug: "qurbani" },
-      { name: "نکاح", slug: "nikah" },
-      { name: "عقیقہ", slug: "aqiqah" },
-      { name: "طہارت", slug: "taharat" },
-      { name: "بیوع", slug: "buyuo" },
-      { name: "رمضان", slug: "ramzan" },
+      {
+        name: "جدید مسائل",
+        englishName: "Modern Issues",
+        banglaName: "আধুনিক বিষয়সমূহ",
+        slug: "jadeed-masail",
+      },
+      {
+        name: "نماز",
+        englishName: "Prayer",
+        banglaName: "নামাজ",
+        slug: "namaz",
+      },
+      {
+        name: "حج",
+        englishName: "Hajj",
+        banglaName: "হজ",
+        slug: "hajj",
+      },
+      {
+        name: "زکوٰۃ",
+        englishName: "Zakat",
+        banglaName: "যাকাত",
+        slug: "zakat",
+      },
+      {
+        name: "قربانی",
+        englishName: "Qurbani",
+        banglaName: "কুরবানি",
+        slug: "qurbani",
+      },
+      {
+        name: "نکاح",
+        englishName: "Nikah",
+        banglaName: "নিকাহ",
+        slug: "nikah",
+      },
+      {
+        name: "عقیقہ",
+        englishName: "Aqiqah",
+        banglaName: "আকিকা",
+        slug: "aqiqah",
+      },
+      {
+        name: "طہارت",
+        englishName: "Purification",
+        banglaName: "পবিত্রতা",
+        slug: "taharat",
+      },
+      {
+        name: "بیوع",
+        englishName: "Business Transactions",
+        banglaName: "ব্যবসায়িক লেনদেন",
+        slug: "buyuo",
+      },
+      {
+        name: "رمضان",
+        englishName: "Ramadan",
+        banglaName: "রমজান",
+        slug: "ramzan",
+      },
     ];
 
     for (const cat of defaultCategories) {
-      const exists = await Category.findOne({ slug: cat.slug });
-      if (!exists) await Category.create(cat);
+      const exists = await Category.findOne({
+        slug: cat.slug,
+      });
+
+      if (!exists) {
+        await Category.create(cat);
+      } else {
+        // Existing categories mein bhi English/Bangla add/update
+        await Category.updateOne(
+          { slug: cat.slug },
+          {
+            $set: {
+              name: cat.name,
+              englishName: cat.englishName,
+              banglaName: cat.banglaName,
+            },
+          }
+        );
+      }
     }
 
-    res.json({ success: true, message: "✅ Categories seeded successfully!" });
+    res.json({
+      success: true,
+      message:
+        "✅ Urdu, English & Bangla categories seeded successfully!",
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("CATEGORY SEED ERROR:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 });
 
-// ✅ Get All Categories
+// =====================================================
+// GET ALL CATEGORIES
+// GET /api/categories
+// =====================================================
+
 router.get("/", async (req, res) => {
   try {
-    const categories = await Category.find().sort({ createdAt: -1 });
-    res.json({ success: true, data: categories });
+    const categories = await Category.find()
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: categories,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 });
 
-// ✅ Get single category by slug
+// =====================================================
+// GET SINGLE CATEGORY
+// GET /api/categories/:slug
+// =====================================================
+
 router.get("/:slug", async (req, res) => {
   try {
-    const category = await Category.findOne({ slug: req.params.slug });
-    if (!category)
-      return res.status(404).json({ success: false, message: "Category not found" });
+    const category = await Category.findOne({
+      slug: req.params.slug,
+    });
 
-    res.json({ success: true, data: category });
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: "Category not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: category,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 });
 
 module.exports = router;
+
