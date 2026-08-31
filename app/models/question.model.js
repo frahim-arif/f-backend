@@ -45,20 +45,24 @@
 // );
 
 
+
 const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema(
   {
-    // =========================
+    // =====================================================
     // ORIGINAL / URDU
-    // =========================
+    // =====================================================
+
     question: {
       type: String,
       trim: true,
+      default: "",
     },
 
     answer: {
       type: String,
+      default: "",
     },
 
     hawala1: {
@@ -76,9 +80,10 @@ const questionSchema = new mongoose.Schema(
       default: "",
     },
 
-    // =========================
+    // =====================================================
     // ENGLISH
-    // =========================
+    // =====================================================
+
     englishQuestion: {
       type: String,
       trim: true,
@@ -108,7 +113,7 @@ const questionSchema = new mongoose.Schema(
     englishSlug: {
       type: String,
       trim: true,
-      default: "",
+      default: undefined,
       unique: true,
       sparse: true,
     },
@@ -128,9 +133,15 @@ const questionSchema = new mongoose.Schema(
       default: [],
     },
 
-    // =========================
+    oldEnglishSlugs: {
+      type: [String],
+      default: [],
+    },
+
+    // =====================================================
     // BANGLA
-    // =========================
+    // =====================================================
+
     banglaQuestion: {
       type: String,
       trim: true,
@@ -160,7 +171,7 @@ const questionSchema = new mongoose.Schema(
     banglaSlug: {
       type: String,
       trim: true,
-      default: "",
+      default: undefined,
       unique: true,
       sparse: true,
     },
@@ -180,23 +191,24 @@ const questionSchema = new mongoose.Schema(
       default: [],
     },
 
-    // =========================
+    oldBanglaSlugs: {
+      type: [String],
+      default: [],
+    },
+
+    // =====================================================
     // CATEGORY
-    // =========================
+    // =====================================================
+
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       default: null,
     },
 
-    // =========================
+    // =====================================================
     // URDU SEO
-    // =========================
-    slug: {
-      type: String,
-      unique: true,
-      sparse: true,
-    },
+    // =====================================================
 
     metaTitle: {
       type: String,
@@ -224,3 +236,4 @@ const questionSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Question", questionSchema);
+

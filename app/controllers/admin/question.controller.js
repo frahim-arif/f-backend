@@ -375,24 +375,23 @@ function parseKeywords(keywords) {
 function createSimpleSlug(text) {
   if (!text) return "no-slug";
 
-  return text
+  const slug = text
     .toString()
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim()
-
-    // Keep only English letters, numbers, spaces and hyphens
     .replace(/[^a-z0-9\s-]/g, "")
-
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
-
     .split("-")
     .filter(Boolean)
     .slice(0, 12)
     .join("-");
+
+  // Bangla/other non-English text se slug empty ho sakta hai
+  return slug || "no-slug";
 }
 
 
