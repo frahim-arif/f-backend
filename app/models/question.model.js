@@ -52,69 +52,69 @@ const mongoose = require("mongoose");
 const questionSchema = new mongoose.Schema(
   {
     // =====================================================
-// ORIGINAL / URDU
-// =====================================================
+    // ORIGINAL / URDU
+    // =====================================================
 
-question: {
-  type: String,
-  required: true,
-  trim: true,
-},
+    question: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
-answer: {
-  type: String,
-  required: true,
-},
+    answer: {
+      type: String,
+      required: true,
+    },
 
-hawala1: {
-  type: String,
-},
+    hawala1: {
+      type: String,
+    },
 
-hawala2: {
-  type: String,
-},
+    hawala2: {
+      type: String,
+    },
 
-hawala3: {
-  type: String,
-},
+    hawala3: {
+      type: String,
+    },
 
-category: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "Category",
-  required: true,
-},
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
 
-// =====================================================
-// URDU SEO
-// =====================================================
+    // =====================================================
+    // URDU SEO
+    // =====================================================
 
-slug: {
-  type: String,
-  unique: true,
-  lowercase: true,
-  trim: true,
-  index: true,
-},
+    slug: {
+      type: String,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      index: true,
+    },
 
-metaTitle: {
-  type: String,
-  default: "",
-},
+    metaTitle: {
+      type: String,
+      default: "",
+    },
 
-metaDescription: {
-  type: String,
-  default: "",
-},
+    metaDescription: {
+      type: String,
+      default: "",
+    },
 
-keywords: {
-  type: [String],
-  default: [],
-},
+    keywords: {
+      type: [String],
+      default: [],
+    },
 
-oldSlugs: {
-  type: [String],
-  default: [],
-},
+    oldSlugs: {
+      type: [String],
+      default: [],
+    },
 
     // =====================================================
     // ENGLISH
@@ -231,16 +231,6 @@ oldSlugs: {
       type: [String],
       default: [],
     },
-
-    // =====================================================
-    // CATEGORY
-    // =====================================================
-
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      default: null,
-    },
   },
   {
     timestamps: true,
@@ -248,5 +238,3 @@ oldSlugs: {
 );
 
 module.exports = mongoose.model("Question", questionSchema);
-
-
