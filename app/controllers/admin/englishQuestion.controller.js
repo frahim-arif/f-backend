@@ -1,443 +1,658 @@
-
 const EnglishQuestion = require("../../models/englishQuestion.model");
 
 // =====================================================
+// HELPER: GENERATE SLUG
+// =====================================================
+
+const generateSlug = (text = "") => {
+return text
+.toString()
+.toLowerCase()
+.trim()
+.replace(/[^a-z0-9\s-]/g, "")
+.replace(/\s+/g, "-")
+.replace(/-+/g, "-")
+.replace(/^-|-$/g, "");
+};
+
+// =====================================================
+// HELPER: UNIQUE SLUG
+// =====================================================
+
+const getUniqueSlug = async (slug, excludeId = null) => {
+let finalSlug = slug;
+let count = 1;
+
+while (true) {
+const query = {
+slug: finalSlug,
+};
+
+
+if (excludeId) {
+  query._id = { $ne: excludeId };
+}
+
+const exists = await EnglishQuestion.findOne(query);
+
+if (!exists) {
+  break;
+}
+
+finalSlug = `${slug}-${count}`;
+count++;
+
+
+}
+
+return finalSlug;
+};
+
+// =====================================================
 // CREATE ENGLISH QUESTION
+// POST /api/en/questions
 // =====================================================
 
 exports.createEnglishQuestion = async (req, res) => {
-  try {
-    console.log("ENGLISH QUESTION BODY:", req.body);
+try {
+console.log("ENGLISH QUESTION BODY:", req.body);
 
-    const {
-      question,
-      answer,
-      hawala1,
-      hawala2,
-      hawala3,
-      slug,
-      metaTitle,
-      metaDescription,
-      keywords,
-      category,
-    } = req.body;
+const {
+  question,
+  answer,
+  hawala1,
+  hawala2,
+  hawala3,
+  slug,
+  metaTitle,
+  metaDescription,
+  keywords,
+  category,
+} = req.body;
 
-    // =====================================================
-    // VALIDATION
-    // =====================================================
+// =====================================================
+// VALIDATION
+// =====================================================
 
-    if (!question?.trim()) {
-      return res.status(400).json({
-        success: false,
-        message: "English question is required",
-      });
-    }
+if (!question?.trim()) {
+  return res.status(400).json({
+    success: false,
+    message: "English question is required",
+  });
+}
 
-    if (!answer?.trim()) {
-      return res.status(400).json({
-        success: false,
-        message: "English answer is required",
-      });
-    }
+if (!answer?.trim()) {
+  return res.status(400).json({
+    success: false,
+    message: "English answer is required",
+  });
+}
 
-    if (!category) {
-      return res.status(400).json({
-        success: false,
-        message: "English category is required",
-      });
-    }
+if (!category) {
+  return res.status(400).json({
+    success: false,
+    message: "English category is required",
+  });
+}
 
-    // =====================================================
-    // GENERATE SLUG
-    // =====================================================
+// =====================================================
+// SLUG
+// =====================================================
 
-    let generatedSlug =
-      slug?.trim() ||
-      question
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
+const generatedSlug = generateSlug(
+  slug?.trim() || question
+);
 
-    // =====================================================
-    // UNIQUE SLUG
-    // =====================================================
+const finalSlug = await getUniqueSlug(
+  generatedSlug
+);
 
-    let finalSlug = generatedSlug;
-    let count = 1;
+// =====================================================
+// KEYWORDS
+// =====================================================
 
-    while (
-      await EnglishQuestion.findOne({
-        slug: finalSlug,
-      })
-    ) {
-      finalSlug = `${generatedSlug}-${count}`;
-      count++;
-    }
+const keywordArray = Array.isArray(keywords)
+  ? keywords
+      .map((item) => item?.toString().trim())
+      .filter(Boolean)
+  : (keywords || "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
 
-    // =====================================================
-    // KEYWORDS
-    // =====================================================
+// =====================================================
+// META DESCRIPTION
+// =====================================================
 
-    const keywordArray = Array.isArray(keywords)
-      ? keywords
-      : (keywords || "")
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
+const cleanAnswer = answer
+  .replace(/<[^>]*>/g, "")
+  .replace(/\s+/g, " ")
+  .trim();
 
-    // =====================================================
-    // CREATE QUESTION
-    // =====================================================
+const finalMetaTitle =
+  metaTitle?.trim() || question.trim();
 
-    const newQuestion = await EnglishQuestion.create({
-      question: question.trim(),
+const finalMetaDescription =
+  metaDescription?.trim() ||
+  cleanAnswer.slice(0, 155);
 
-      answer: answer.trim(),
+// =====================================================
+// CREATE
+// =====================================================
 
-      hawala1: hawala1?.trim() || "",
-      hawala2: hawala2?.trim() || "",
-      hawala3: hawala3?.trim() || "",
+const newQuestion =
+  await EnglishQuestion.create({
+    question: question.trim(),
 
-      slug: finalSlug,
+    answer: answer.trim(),
 
-      metaTitle:
-        metaTitle?.trim() || question.trim(),
+    hawala1: hawala1?.trim() || "",
+    hawala2: hawala2?.trim() || "",
+    hawala3: hawala3?.trim() || "",
 
-      metaDescription:
-        metaDescription?.trim() ||
-        answer
-          .replace(/<[^>]*>/g, "")
-          .slice(0, 155),
+    slug: finalSlug,
 
-      keywords: keywordArray,
+    metaTitle: finalMetaTitle,
 
-      category,
-    });
+    metaDescription: finalMetaDescription,
 
-    // =====================================================
-    // SUCCESS
-    // =====================================================
+    keywords: keywordArray,
 
-    return res.status(201).json({
-      success: true,
-      message: "English question added successfully",
-      data: newQuestion,
-    });
-  } catch (error) {
-    console.error(
-      "❌ ENGLISH CREATE ERROR:",
-      error
-    );
+    category,
+  });
 
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+// Populate category before response
+await newQuestion.populate("category");
+
+// =====================================================
+// SUCCESS
+// =====================================================
+
+return res.status(201).json({
+  success: true,
+  message: "English question added successfully",
+  data: newQuestion,
+});
+
+
+} catch (error) {
+console.error(
+"❌ ENGLISH CREATE ERROR:",
+error
+);
+
+
+return res.status(500).json({
+  success: false,
+  message: error.message,
+});
+
+
+}
 };
 
 // =====================================================
 // GET ALL ENGLISH QUESTIONS
+//
+// GET /api/en/questions
+//
+// Examples:
+//
+// /api/en/questions
+// /api/en/questions?limit=10
+// /api/en/questions?limit=10&skip=0
+// /api/en/questions?category=namaz
+// /api/en/questions?category=namaz&limit=100
+// /api/en/questions?search=prayer
+//
 // =====================================================
 
 exports.getEnglishQuestions = async (req, res) => {
-  try {
-    const limit =
-      parseInt(req.query.limit) || 10;
+try {
+const limit = Math.min(
+Math.max(parseInt(req.query.limit) || 10, 1),
+100
+);
 
-    const skip =
-      parseInt(req.query.skip) || 0;
 
-    const questions =
-      await EnglishQuestion.find()
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit)
-        .populate("category");
+const skip = Math.max(
+  parseInt(req.query.skip) || 0,
+  0
+);
 
-    return res.json({
-      success: true,
-      data: questions,
-    });
-  } catch (error) {
-    console.error(
-      "❌ ENGLISH GET ERROR:",
-      error
-    );
+const category = req.query.category?.trim();
+const search = req.query.search?.trim();
 
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+// =====================================================
+// BUILD QUERY
+// =====================================================
+
+const query = {};
+
+// =====================================================
+// CATEGORY FILTER
+// =====================================================
+
+if (category) {
+  query.category = category;
+}
+
+// =====================================================
+// SEARCH FILTER
+// =====================================================
+
+if (search) {
+  query.$or = [
+    {
+      question: {
+        $regex: search,
+        $options: "i",
+      },
+    },
+    {
+      answer: {
+        $regex: search,
+        $options: "i",
+      },
+    },
+  ];
+}
+
+// =====================================================
+// GET QUESTIONS
+// =====================================================
+
+const [questions, total] =
+  await Promise.all([
+    EnglishQuestion.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("category"),
+
+    EnglishQuestion.countDocuments(query),
+  ]);
+
+// =====================================================
+// SUCCESS
+// =====================================================
+
+return res.json({
+  success: true,
+
+  data: questions,
+
+  pagination: {
+    total,
+    limit,
+    skip,
+    currentPage:
+      Math.floor(skip / limit) + 1,
+    totalPages:
+      Math.ceil(total / limit),
+    hasNextPage:
+      skip + questions.length < total,
+    hasPreviousPage:
+      skip > 0,
+  },
+});
+
+
+} catch (error) {
+console.error(
+"❌ ENGLISH GET ERROR:",
+error
+);
+
+
+return res.status(500).json({
+  success: false,
+  message: error.message,
+});
+
+
+}
 };
 
 // =====================================================
 // GET ENGLISH QUESTION BY SLUG
+//
+// GET /api/en/questions/slug/:slug
 // =====================================================
 
 exports.getEnglishQuestionBySlug = async (
-  req,
-  res
+req,
+res
 ) => {
-  try {
-    const { slug } = req.params;
+try {
+const { slug } = req.params;
 
-    const question =
-      await EnglishQuestion.findOne({
-        $or: [
-          { slug: slug },
-          { oldSlugs: slug },
-        ],
-      }).populate("category");
 
-    if (!question) {
-      return res.status(404).json({
-        success: false,
-        message: "English question not found",
-      });
-    }
+if (!slug) {
+  return res.status(400).json({
+    success: false,
+    message: "Question slug is required",
+  });
+}
 
-    return res.json({
-      success: true,
-      data: question,
-    });
-  } catch (error) {
-    console.error(
-      "❌ ENGLISH SLUG ERROR:",
-      error
-    );
+const question =
+  await EnglishQuestion.findOne({
+    $or: [
+      {
+        slug: slug,
+      },
+      {
+        oldSlugs: slug,
+      },
+    ],
+  }).populate("category");
 
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+if (!question) {
+  return res.status(404).json({
+    success: false,
+    message:
+      "English question not found",
+  });
+}
+
+return res.json({
+  success: true,
+  data: question,
+});
+
+
+} catch (error) {
+console.error(
+"❌ ENGLISH SLUG ERROR:",
+error
+);
+
+
+return res.status(500).json({
+  success: false,
+  message: error.message,
+});
+
+
+}
 };
 
 // =====================================================
 // UPDATE ENGLISH QUESTION
+//
+// PUT /api/en/questions/:id
 // =====================================================
 
 exports.updateEnglishQuestion = async (
-  req,
-  res
+req,
+res
 ) => {
-  try {
-    const { id } = req.params;
+try {
+const { id } = req.params;
 
-    const existing =
-      await EnglishQuestion.findById(id);
+// =====================================================
+// FIND EXISTING
+// =====================================================
 
-    if (!existing) {
-      return res.status(404).json({
-        success: false,
-        message: "English question not found",
-      });
-    }
+const existing =
+  await EnglishQuestion.findById(id);
 
-    const {
-      question,
-      answer,
-      hawala1,
-      hawala2,
-      hawala3,
-      slug,
-      metaTitle,
-      metaDescription,
-      keywords,
-      category,
-    } = req.body;
+if (!existing) {
+  return res.status(404).json({
+    success: false,
+    message:
+      "English question not found",
+  });
+}
 
-    // =====================================================
-    // CONTENT
-    // =====================================================
+const {
+  question,
+  answer,
+  hawala1,
+  hawala2,
+  hawala3,
+  slug,
+  metaTitle,
+  metaDescription,
+  keywords,
+  category,
+} = req.body;
 
-    if (question !== undefined) {
-      if (!question.trim()) {
-        return res.status(400).json({
-          success: false,
-          message: "English question is required",
-        });
-      }
+// =====================================================
+// QUESTION
+// =====================================================
 
-      existing.question = question.trim();
-    }
-
-    if (answer !== undefined) {
-      if (!answer.trim()) {
-        return res.status(400).json({
-          success: false,
-          message: "English answer is required",
-        });
-      }
-
-      existing.answer = answer.trim();
-    }
-
-    // =====================================================
-    // HAWALA
-    // =====================================================
-
-    if (hawala1 !== undefined) {
-      existing.hawala1 = hawala1;
-    }
-
-    if (hawala2 !== undefined) {
-      existing.hawala2 = hawala2;
-    }
-
-    if (hawala3 !== undefined) {
-      existing.hawala3 = hawala3;
-    }
-
-    // =====================================================
-    // CATEGORY
-    // =====================================================
-
-    if (category !== undefined) {
-      existing.category = category;
-    }
-
-    // =====================================================
-    // SEO
-    // =====================================================
-
-    if (metaTitle !== undefined) {
-      existing.metaTitle = metaTitle;
-    }
-
-    if (metaDescription !== undefined) {
-      existing.metaDescription =
-        metaDescription;
-    }
-
-    if (keywords !== undefined) {
-      existing.keywords = Array.isArray(
-        keywords
-      )
-        ? keywords
-        : keywords
-            .split(",")
-            .map((item) => item.trim())
-            .filter(Boolean);
-    }
-
-    // =====================================================
-    // SLUG
-    // =====================================================
-
-    if (slug !== undefined && slug.trim()) {
-      const cleanSlug = slug
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
-
-      let finalSlug = cleanSlug;
-      let count = 1;
-
-      while (
-        await EnglishQuestion.findOne({
-          slug: finalSlug,
-          _id: { $ne: id },
-        })
-      ) {
-        finalSlug = `${cleanSlug}-${count}`;
-        count++;
-      }
-
-      // Save old slug
-      if (
-        existing.slug &&
-        existing.slug !== finalSlug
-      ) {
-        if (!existing.oldSlugs) {
-          existing.oldSlugs = [];
-        }
-
-        if (
-          !existing.oldSlugs.includes(
-            existing.slug
-          )
-        ) {
-          existing.oldSlugs.push(
-            existing.slug
-          );
-        }
-      }
-
-      existing.slug = finalSlug;
-    }
-
-    // =====================================================
-    // SAVE
-    // =====================================================
-
-    await existing.save();
-
-    return res.json({
-      success: true,
-      message:
-        "English question updated successfully",
-      data: existing,
-    });
-  } catch (error) {
-    console.error(
-      "❌ ENGLISH UPDATE ERROR:",
-      error
-    );
-
-    return res.status(500).json({
+if (question !== undefined) {
+  if (!question?.trim()) {
+    return res.status(400).json({
       success: false,
-      message: error.message,
+      message:
+        "English question is required",
     });
   }
+
+  existing.question =
+    question.trim();
+}
+
+// =====================================================
+// ANSWER
+// =====================================================
+
+if (answer !== undefined) {
+  if (!answer?.trim()) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "English answer is required",
+    });
+  }
+
+  existing.answer =
+    answer.trim();
+}
+
+// =====================================================
+// HAWALA
+// =====================================================
+
+if (hawala1 !== undefined) {
+  existing.hawala1 =
+    hawala1?.trim() || "";
+}
+
+if (hawala2 !== undefined) {
+  existing.hawala2 =
+    hawala2?.trim() || "";
+}
+
+if (hawala3 !== undefined) {
+  existing.hawala3 =
+    hawala3?.trim() || "";
+}
+
+// =====================================================
+// CATEGORY
+// =====================================================
+
+if (category !== undefined) {
+  if (!category) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "English category is required",
+    });
+  }
+
+  existing.category = category;
+}
+
+// =====================================================
+// SEO
+// =====================================================
+
+if (metaTitle !== undefined) {
+  existing.metaTitle =
+    metaTitle?.trim() || "";
+}
+
+if (
+  metaDescription !== undefined
+) {
+  existing.metaDescription =
+    metaDescription?.trim() || "";
+}
+
+// =====================================================
+// KEYWORDS
+// =====================================================
+
+if (keywords !== undefined) {
+  existing.keywords =
+    Array.isArray(keywords)
+      ? keywords
+          .map((item) =>
+            item?.toString().trim()
+          )
+          .filter(Boolean)
+      : (keywords || "")
+          .split(",")
+          .map((item) =>
+            item.trim()
+          )
+          .filter(Boolean);
+}
+
+// =====================================================
+// SLUG
+// =====================================================
+
+if (
+  slug !== undefined &&
+  slug?.trim()
+) {
+  const cleanSlug =
+    generateSlug(slug);
+
+  const finalSlug =
+    await getUniqueSlug(
+      cleanSlug,
+      id
+    );
+
+  // Save old slug
+  if (
+    existing.slug &&
+    existing.slug !== finalSlug
+  ) {
+    if (
+      !Array.isArray(
+        existing.oldSlugs
+      )
+    ) {
+      existing.oldSlugs = [];
+    }
+
+    if (
+      !existing.oldSlugs.includes(
+        existing.slug
+      )
+    ) {
+      existing.oldSlugs.push(
+        existing.slug
+      );
+    }
+  }
+
+  existing.slug =
+    finalSlug;
+}
+
+// =====================================================
+// SAVE
+// =====================================================
+
+await existing.save();
+
+await existing.populate(
+  "category"
+);
+
+// =====================================================
+// SUCCESS
+// =====================================================
+
+return res.json({
+  success: true,
+  message:
+    "English question updated successfully",
+  data: existing,
+});
+
+
+} catch (error) {
+console.error(
+"❌ ENGLISH UPDATE ERROR:",
+error
+);
+
+
+return res.status(500).json({
+  success: false,
+  message: error.message,
+});
+
+
+}
 };
 
 // =====================================================
 // DELETE ENGLISH QUESTION
+//
+// DELETE /api/en/questions/:id
 // =====================================================
 
 exports.deleteEnglishQuestion = async (
-  req,
-  res
+req,
+res
 ) => {
-  try {
-    const { id } = req.params;
+try {
+const { id } = req.params;
 
-    const question =
-      await EnglishQuestion.findById(id);
 
-    if (!question) {
-      return res.status(404).json({
-        success: false,
-        message: "English question not found",
-      });
-    }
+const question =
+  await EnglishQuestion.findById(id);
 
-    await EnglishQuestion.findByIdAndDelete(id);
+if (!question) {
+  return res.status(404).json({
+    success: false,
+    message:
+      "English question not found",
+  });
+}
 
-    return res.json({
-      success: true,
-      message:
-        "English question deleted successfully",
-    });
-  } catch (error) {
-    console.error(
-      "❌ ENGLISH DELETE ERROR:",
-      error
-    );
+await EnglishQuestion.findByIdAndDelete(
+  id
+);
 
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+return res.json({
+  success: true,
+  message:
+    "English question deleted successfully",
+});
+
+
+} catch (error) {
+console.error(
+"❌ ENGLISH DELETE ERROR:",
+error
+);
+
+return res.status(500).json({
+  success: false,
+  message: error.message,
+});
+
+
+}
 };
-
