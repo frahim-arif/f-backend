@@ -1,12 +1,7 @@
-
 const mongoose = require("mongoose");
 
 const banglaQuestionSchema = new mongoose.Schema(
   {
-    // =====================================================
-    // BANGLA CONTENT
-    // =====================================================
-
     question: {
       type: String,
       required: true,
@@ -33,19 +28,11 @@ const banglaQuestionSchema = new mongoose.Schema(
       default: "",
     },
 
-    // =====================================================
-    // CATEGORY
-    // =====================================================
-
     category: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      ref: "BanglaCategory",
       required: true,
     },
-
-    // =====================================================
-    // BANGLA SEO
-    // =====================================================
 
     slug: {
       type: String,
@@ -82,4 +69,3 @@ const banglaQuestionSchema = new mongoose.Schema(
 module.exports =
   mongoose.models.BanglaQuestion ||
   mongoose.model("BanglaQuestion", banglaQuestionSchema);
-
