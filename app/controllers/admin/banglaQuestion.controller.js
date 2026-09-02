@@ -1,5 +1,9 @@
 const BanglaQuestion = require("../../models/banglaQuestion.model");
 
+// =====================================================
+// STRIP HTML
+// =====================================================
+
 function stripHtml(text = "") {
   return text
     .toString()
@@ -9,6 +13,10 @@ function stripHtml(text = "") {
     .replace(/\s+/g, " ")
     .trim();
 }
+
+// =====================================================
+// PARSE KEYWORDS
+// =====================================================
 
 function parseKeywords(keywords) {
   if (!keywords) return [];
@@ -26,13 +34,125 @@ function parseKeywords(keywords) {
     .filter(Boolean);
 }
 
+// =====================================================
+// BANGLA → ROMAN
+// =====================================================
+
+function banglaToRoman(text = "") {
+  const map = {
+    // Vowels
+    "অ": "o",
+    "আ": "a",
+    "ই": "i",
+    "ঈ": "i",
+    "উ": "u",
+    "ঊ": "u",
+    "ঋ": "ri",
+    "এ": "e",
+    "ঐ": "oi",
+    "ও": "o",
+    "ঔ": "ou",
+
+    // Ka group
+    "ক": "k",
+    "খ": "kh",
+    "গ": "g",
+    "ঘ": "gh",
+    "ঙ": "ng",
+
+    // Cha group
+    "চ": "ch",
+    "ছ": "chh",
+    "জ": "j",
+    "ঝ": "jh",
+    "ঞ": "n",
+
+    // Ta group
+    "ট": "t",
+    "ঠ": "th",
+    "ড": "d",
+    "ঢ": "dh",
+    "ণ": "n",
+
+    // Ta group
+    "ত": "t",
+    "থ": "th",
+    "দ": "d",
+    "ধ": "dh",
+    "ন": "n",
+
+    // Pa group
+    "প": "p",
+    "ফ": "ph",
+    "ব": "b",
+    "ভ": "bh",
+    "ম": "m",
+
+    // Others
+    "য": "j",
+    "র": "r",
+    "ল": "l",
+
+    "শ": "sh",
+    "ষ": "sh",
+    "স": "s",
+    "হ": "h",
+
+    "ড়": "r",
+    "ঢ়": "rh",
+    "য়": "y",
+
+    // Signs
+    "ৎ": "t",
+    "ং": "ng",
+    "ঃ": "h",
+    "ঁ": "n",
+
+    // Hasanta
+    "্": "",
+
+    // Vowel signs
+    "া": "a",
+    "ি": "i",
+    "ী": "i",
+    "ু": "u",
+    "ূ": "u",
+    "ৃ": "ri",
+    "ে": "e",
+    "ৈ": "oi",
+    "ো": "o",
+    "ৌ": "ou",
+
+    // Bengali numbers
+    "০": "0",
+    "১": "1",
+    "২": "2",
+    "৩": "3",
+    "৪": "4",
+    "৫": "5",
+    "৬": "6",
+    "৭": "7",
+    "৮": "8",
+    "৯": "9",
+  };
+
+  return text
+    .toString()
+    .split("")
+    .map((char) => map[char] ?? char)
+    .join("");
+}
+
+// =====================================================
+// CREATE ROMAN SLUG
+// =====================================================
+
 function createSimpleSlug(text) {
   if (!text) return "no-slug";
 
-  const slug = text
-    .toString()
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
+  const romanText = banglaToRoman(text);
+
+  const slug = romanText
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9\s-]/g, "")
@@ -47,6 +167,10 @@ function createSimpleSlug(text) {
   return slug || "no-slug";
 }
 
+// =====================================================
+// MAKE UNIQUE SLUG
+// =====================================================
+
 async function makeUniqueSlug(baseSlug, id = null) {
   const cleanBaseSlug = baseSlug || "no-slug";
 
@@ -56,7 +180,13 @@ async function makeUniqueSlug(baseSlug, id = null) {
   while (
     await BanglaQuestion.findOne({
       slug: finalSlug,
-      ...(id ? { _id: { $ne: id } } : {}),
+      ...(id
+        ? {
+            _id: {
+              $ne: id,
+            },
+          }
+        : {}),
     })
   ) {
     finalSlug = `${cleanBaseSlug}-${count}`;
@@ -66,9 +196,16 @@ async function makeUniqueSlug(baseSlug, id = null) {
   return finalSlug;
 }
 
+// =====================================================
+// CREATE BANGLA QUESTION
+// POST /api/bn/questions
+// =====================================================
+
 exports.createBanglaQuestion = async (req, res) => {
   try {
+    console.log("=================================");
     console.log("BANGLA QUESTION BODY:", req.body);
+    console.log("=================================");
 
     const {
       question,
@@ -76,12 +213,15 @@ exports.createBanglaQuestion = async (req, res) => {
       hawala1,
       hawala2,
       hawala3,
-      slug,
       metaTitle,
       metaDescription,
       keywords,
       category,
     } = req.body;
+
+    // -------------------------------------------------
+    // VALIDATION
+    // -------------------------------------------------
 
     if (!question?.trim()) {
       return res.status(400).json({
@@ -104,15 +244,28 @@ exports.createBanglaQuestion = async (req, res) => {
       });
     }
 
-    const generatedSlug =
-      slug?.trim() ||
-      createSimpleSlug(question);
+    // -------------------------------------------------
+    // ALWAYS GENERATE ROMAN SLUG FROM QUESTION
+    // -------------------------------------------------
 
-    const finalSlug =
-      await makeUniqueSlug(generatedSlug);
+    const generatedSlug = createSimpleSlug(question);
 
-    const keywordArray =
-      parseKeywords(keywords);
+    const finalSlug = await makeUniqueSlug(
+      generatedSlug
+    );
+
+    console.log("Generated Roman Slug:", generatedSlug);
+    console.log("Final Roman Slug:", finalSlug);
+
+    // -------------------------------------------------
+    // KEYWORDS
+    // -------------------------------------------------
+
+    const keywordArray = parseKeywords(keywords);
+
+    // -------------------------------------------------
+    // CREATE QUESTION
+    // -------------------------------------------------
 
     const newQuestion =
       await BanglaQuestion.create({
@@ -126,6 +279,8 @@ exports.createBanglaQuestion = async (req, res) => {
 
         hawala3: hawala3?.trim() || "",
 
+        // IMPORTANT:
+        // Always save Roman slug
         slug: finalSlug,
 
         metaTitle:
@@ -141,10 +296,15 @@ exports.createBanglaQuestion = async (req, res) => {
         category,
       });
 
+    // -------------------------------------------------
+    // SUCCESS
+    // -------------------------------------------------
+
     return res.status(201).json({
       success: true,
       message:
         "Bangla question added successfully",
+
       data: newQuestion,
     });
   } catch (error) {
@@ -160,7 +320,15 @@ exports.createBanglaQuestion = async (req, res) => {
   }
 };
 
-exports.getBanglaQuestions = async (req, res) => {
+// =====================================================
+// GET ALL BANGLA QUESTIONS
+// GET /api/bn/questions
+// =====================================================
+
+exports.getBanglaQuestions = async (
+  req,
+  res
+) => {
   try {
     const limit =
       parseInt(req.query.limit) || 10;
@@ -170,7 +338,9 @@ exports.getBanglaQuestions = async (req, res) => {
 
     const questions =
       await BanglaQuestion.find()
-        .sort({ createdAt: -1 })
+        .sort({
+          createdAt: -1,
+        })
         .skip(skip)
         .limit(limit)
         .populate("category");
@@ -199,6 +369,11 @@ exports.getBanglaQuestions = async (req, res) => {
   }
 };
 
+// =====================================================
+// GET BANGLA QUESTION BY SLUG
+// GET /api/bn/questions/slug/:slug
+// =====================================================
+
 exports.getBanglaQuestionBySlug = async (
   req,
   res
@@ -209,8 +384,12 @@ exports.getBanglaQuestionBySlug = async (
     const question =
       await BanglaQuestion.findOne({
         $or: [
-          { slug },
-          { oldSlugs: slug },
+          {
+            slug: slug,
+          },
+          {
+            oldSlugs: slug,
+          },
         ],
       }).populate("category");
 
@@ -238,6 +417,11 @@ exports.getBanglaQuestionBySlug = async (
     });
   }
 };
+
+// =====================================================
+// UPDATE BANGLA QUESTION
+// PUT /api/bn/questions/:id
+// =====================================================
 
 exports.updateBanglaQuestion = async (
   req,
@@ -270,6 +454,10 @@ exports.updateBanglaQuestion = async (
       category,
     } = req.body;
 
+    // =================================================
+    // QUESTION
+    // =================================================
+
     if (question !== undefined) {
       if (!question.trim()) {
         return res.status(400).json({
@@ -283,6 +471,10 @@ exports.updateBanglaQuestion = async (
         question.trim();
     }
 
+    // =================================================
+    // ANSWER
+    // =================================================
+
     if (answer !== undefined) {
       if (!answer.trim()) {
         return res.status(400).json({
@@ -295,6 +487,10 @@ exports.updateBanglaQuestion = async (
       existing.answer =
         answer.trim();
     }
+
+    // =================================================
+    // HAWALA
+    // =================================================
 
     if (hawala1 !== undefined) {
       existing.hawala1 =
@@ -311,6 +507,10 @@ exports.updateBanglaQuestion = async (
         hawala3.trim();
     }
 
+    // =================================================
+    // CATEGORY
+    // =================================================
+
     if (category !== undefined) {
       if (!category) {
         return res.status(400).json({
@@ -323,20 +523,36 @@ exports.updateBanglaQuestion = async (
       existing.category = category;
     }
 
+    // =================================================
+    // META TITLE
+    // =================================================
+
     if (metaTitle !== undefined) {
       existing.metaTitle =
         metaTitle.trim();
     }
+
+    // =================================================
+    // META DESCRIPTION
+    // =================================================
 
     if (metaDescription !== undefined) {
       existing.metaDescription =
         metaDescription.trim();
     }
 
+    // =================================================
+    // KEYWORDS
+    // =================================================
+
     if (keywords !== undefined) {
       existing.keywords =
         parseKeywords(keywords);
     }
+
+    // =================================================
+    // SLUG
+    // =================================================
 
     if (
       slug !== undefined &&
@@ -351,6 +567,7 @@ exports.updateBanglaQuestion = async (
           id
         );
 
+      // Save previous slug
       if (
         existing.slug &&
         existing.slug !== finalSlug
@@ -369,8 +586,13 @@ exports.updateBanglaQuestion = async (
         }
       }
 
-      existing.slug = finalSlug;
+      existing.slug =
+        finalSlug;
     }
+
+    // =================================================
+    // AUTO META TITLE
+    // =================================================
 
     if (
       metaTitle !== undefined &&
@@ -381,14 +603,25 @@ exports.updateBanglaQuestion = async (
         question.trim();
     }
 
+    // =================================================
+    // AUTO META DESCRIPTION
+    // =================================================
+
     if (
       metaDescription !== undefined &&
       !metaDescription.trim() &&
       answer !== undefined
     ) {
       existing.metaDescription =
-        stripHtml(answer).slice(0, 155);
+        stripHtml(answer).slice(
+          0,
+          155
+        );
     }
+
+    // =================================================
+    // SAVE
+    // =================================================
 
     await existing.save();
 
@@ -410,6 +643,11 @@ exports.updateBanglaQuestion = async (
     });
   }
 };
+
+// =====================================================
+// DELETE BANGLA QUESTION
+// DELETE /api/bn/questions/:id
+// =====================================================
 
 exports.deleteBanglaQuestion = async (
   req,
