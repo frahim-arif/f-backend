@@ -57,6 +57,7 @@ const corrections = {
   ozn: "wazan", kie: "kiye", bndl: "bundle", dbe: "dabbe", saman: "samaan",mdrsh: "madrasa", albnat: "al-banaat", lrkio: "ladkiyon",qsda: "qasdan", bajmat: "ba-jamaat",admi: "aadmi",  msafr: "musaafir", bnta: "banta", nit: "niyyat",amin: "aameen", baljhr: "bil-jahr", aur: "aur", balsr: "bis-sirr",mnh: "munh",chhlh: "chhalla", dal: "daal", shfa: "shifa", amid: "umeed",
   joaz: "jawaaz", ten: "teen", admio: "aadmiyon", alaoh: "alaawa", shhr: "shahr",mstaml: "musta'mal",hndostani: "hindustani", zamen: "zameen", ashri: "ushri", khraji: "kharaaji",aik: "ek", zla: "zila", pndrh: "pandrah", ziadh: "zyada", qiam: "qiyaam",tjhe: "tujhe", tino: "teeno",  hayya: "hai", khne: "kahne", ktni: "kitni", oaqa: "waaqe",
   mlne: "milne",  suna: "sana", prhni: "parhni", chahie: "chaahiye",mft: "muft",mrdar: "murda",msoak: "miswaak", ke: "ke", qaim: "qaaim", mqam: "muqaam", brsh: "brush",sor: "surah", se: "soad",ait: "aayat",tisho: "tissue", pipr: "paper", soad: "se", astnja: "istinja",prane: "purane", aur: "aur", phte: "phate", not: "note", qimt: "qeemat",  bichna: "bechna",  bdlna: "badalna",
+  phl: "phal", ane: "aane", bad: "baad", bdo: "badu", slah: "salaah",
 };
 
 function createSlug(text) {
