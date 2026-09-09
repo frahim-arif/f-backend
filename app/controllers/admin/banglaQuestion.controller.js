@@ -1056,12 +1056,25 @@ exports.createBanglaQuestion = async (req, res) => {
     // ALWAYS GENERATE ROMAN SLUG FROM QUESTION
     // -------------------------------------------------
 
-    const generatedSlug = createSimpleSlug(question);
+    // -------------------------------------------------
+// SLUG
+// -------------------------------------------------
 
-    const finalSlug = await makeUniqueSlug(generatedSlug);
+// Frontend se manual slug diya gaya ho to wahi use hoga.
+// Agar manual slug empty ho to question se automatic slug banega.
 
-    console.log("Generated Roman Slug:", generatedSlug);
-    console.log("Final Roman Slug:", finalSlug);
+let baseSlug = "";
+
+if (slug?.trim()) {
+  baseSlug = slug.trim();
+} else {
+  baseSlug = createSimpleSlug(question);
+}
+
+const finalSlug = await makeUniqueSlug(baseSlug);
+
+console.log("Manual/Generated Base Slug:", baseSlug);
+console.log("Final Roman Slug:", finalSlug);
 
     // -------------------------------------------------
     // KEYWORDS
