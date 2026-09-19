@@ -59,6 +59,7 @@ const corrections = {
   mlne: "milne",  phl: "phal", ane: "aane", bad: "baad", bdo: "badu", slah: "salaah",mft: "muft",mrdar: "murda",msoak: "miswaak", ke: "ke", qaim: "qaaim", mqam: "muqaam", brsh: "brush",sor: "surah", se: "soad",ait: "aayat",tisho: "tissue", pipr: "paper", soad: "se", astnja: "istinja",prane: "purane", aur: "aur", phte: "phate", not: "note", qimt: "qeemat",  bichna: "bechna",  bdlna: "badalna",
   phl: "phal", ane: "aane", bad: "baad", bdo: "badu", slah: "salaah",matbr: "mutabar",thjd: "tahajjud",ait: "aayat",qran: "quraan",zban: "zuban",zhr: "zuhr",  akhri: "aakhri", abtdai: "ibtidaai",hayya: "he","mkhtlf": "mukhtalif", "shhro": "shahron", "qsr": "qasr",njast: "najaasat", gr: "gir",sdqh: "sadaqah", ghrib: "ghareeb","qran": "quraan", "ohdis": "o-haadis", "khi": "kaheen", "chaol": "chaawal","zkr": "zikr",
   briloi: "barelvi", imam: "imaam", aqtda: "iqtida", adh: "i'aada", "gnah": "gunaah", "dosre": "doosre", "niki": "neki", "sbb": "sabab","btai": "bataai", "die": "diye", "ge": "gaye", "khit": "khet",  "pidaoar": "paidawaar", "shar": "shar'i", "fraz": "farz", "allh": "allaah",  "snn": "sunnat", "ansani": "insaani", "aijad": "ijaad", "smjhna": "samajhna", "shb": "shab", "brt": "baraat","nfli": "nafl", "khals": "khaalis", "siah": "syaah", "khzab": "khizaab","skte": "sakte", "hayya": "hai", 
+   "naye": "ne", "kliji": "kaleji", "napsnd": "naapasand", "frmai": "farmaai", 
 };
 
 function createSlug(text) {
