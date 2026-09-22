@@ -61,6 +61,7 @@ const corrections = {
   briloi: "barelvi", imam: "imaam", aqtda: "iqtida", adh: "i'aada", "gnah": "gunaah", "dosre": "doosre", "niki": "neki", "sbb": "sabab","btai": "bataai", "die": "diye", "ge": "gaye", "khit": "khet",  "pidaoar": "paidawaar", "shar": "shar'i", "fraz": "farz", "allh": "allaah",  "snn": "sunnat", "ansani": "insaani", "aijad": "ijaad", "smjhna": "samajhna", "shb": "shab", "brt": "baraat","nfli": "nafl", "khals": "khaalis", "siah": "syaah", "khzab": "khizaab","skte": "sakte", "hayya": "hai", 
    "naye": "ne", "kliji": "kaleji", "napsnd": "naapasand", "frmai": "farmaai", "unnat": "ummat", "mkdh": "Makkah", "thi": "thyt", "almsjd": "al-masjid", "nfl": "nafl",  "krskte": "kar-sakte", "hayya": "hai","daktr": "doctor", "mriz": "mareez", "bhijne": "bhejne", "bdle": "badle", "kmishn": "commision", "pitl": "peetal", "brtn": "bartan", "mit": "mayyt", "alaj": "ilaaj",  "khrch": "kharch",  "trkh": "tarkah", "mle": "mile",
    "qran": "quraan", "hath": "haath", "jhoti": "jhooti", "qsm": "qasam", "khane": "khaane", "kfarh": "kaffaara","kmpni": "company","kto": "kutte", "rozanh": "rozana", "bskt": "biskut", "khlana": "khilaana","imam": "imaam", "abohnifh": "abu-hanifa","shabi": "saahaabi","hadith": "hadees", "roait": "riwaayat","tng": "tang", "akr": "aakar", "mot": "maut","nim": "neem", "pto": "patton",  "pke": "pake","otr": "witr",  "bad": "baad", "tshhd": "tashahhud",    "sabt": "saabit",
+   "ath": "aath","dlal": "dalaail",
 };
 
 function createSlug(text) {
