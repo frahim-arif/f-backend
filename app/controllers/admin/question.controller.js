@@ -62,7 +62,7 @@ const corrections = {
    "naye": "ne", "kliji": "kaleji", "napsnd": "naapasand", "frmai": "farmaai", "unnat": "ummat", "mkdh": "Makkah", "thi": "thyt", "almsjd": "al-masjid", "nfl": "nafl",  "krskte": "kar-sakte", "hayya": "hai","daktr": "doctor", "mriz": "mareez", "bhijne": "bhejne", "bdle": "badle", "kmishn": "commision", "pitl": "peetal", "brtn": "bartan", "mit": "mayyt", "alaj": "ilaaj",  "khrch": "kharch",  "trkh": "tarkah", "mle": "mile",
    "qran": "quraan", "hath": "haath", "jhoti": "jhooti", "qsm": "qasam", "khane": "khaane", "kfarh": "kaffaara","kmpni": "company","kto": "kutte", "rozanh": "rozana", "bskt": "biskut", "khlana": "khilaana","imam": "imaam", "abohnifh": "abu-hanifa","shabi": "saahaabi","hadith": "hadees", "roait": "riwaayat","tng": "tang", "akr": "aakar", "mot": "maut","nim": "neem", "pto": "patton",  "pke": "pake","otr": "witr",  "bad": "baad", "tshhd": "tashahhud",    "sabt": "saabit",
    "ath": "aath","dlal": "dalaail","biwi": "biwi", "dl": "dil", "mrizh": "mareez", "khbr": "khabar","ofat": "wafaat",fod: "food",klr: "kilar",chit: "chat" ,ji: "g",pi: "p",ti: "t","lrke": "ladke", "ka": "ka", "nam": "naam", "srf": "sirf", "mhmd": "Muhammad",  "hayya": "hai","monchho": "moochhon","ta": "taaw",  "ashh": "Aisha", "pkarti": "pukaarti", "thyt": "thin","nam": "naam",fathh : "fateha",
-   "bcho": "bachchon",  "dini": "deeni", "dnioi": "duniyawi", "talim": "ta'leem",
+   "bcho": "bachchon",  "dini": "deeni", "dnioi": "duniyawi", "talim": "ta'leem","dae": "du'a", "masorh": "masnoon", "ke": "ke", "bjae": "bajaaye", "qran": "quraan",
 };
 
 function createSlug(text) {
