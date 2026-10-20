@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const server = express();
+server.set("trust proxy", 1);
 
 // =====================================================
 // MIDDLEWARE
@@ -164,6 +165,11 @@ server.use(
   banglaCategoryRoutes
 );
 
+
+// Ask Question (user se aaye hue sawal)
+const askQuestionRoutes = require("./app/routes/askQuestion.routes");
+
+server.use("/api/ask-question", askQuestionRoutes);
 // =====================================================
 // 404 - ALWAYS LAST
 // =====================================================
