@@ -57,11 +57,15 @@ exports.deleteAskQuestion = async (req, res) => {
   }
 };
 
+
 // PUBLIC: sirf approved sawal, contact ke bina
 exports.getPublicAskQuestions = async (req, res) => {
   try {
-    const skip = parseInt(req.query.skip, 10) || 0;
-    const limit = Math.min(parseInt(req.query.limit, 10) || 10, 30);
+    const skip = Math.max(0, parseInt(req.query.skip, 10) || 0);
+    const limit = Math.min(
+      Math.max(1, parseInt(req.query.limit, 10) || 10),
+      30
+    );
 
     const rows = await AskQuestion.find({ isPublic: true })
       .sort({ createdAt: -1 })
@@ -77,23 +81,45 @@ exports.getPublicAskQuestions = async (req, res) => {
       createdAt: r.createdAt,
     }));
 
-    res.json({ success: true, data });
+    return res.json({ success: true, data });
   } catch (err) {
     console.error("getPublicAskQuestions error:", err);
-    res.status(500).json({ success: false });
+    return res.status(500).json({
+      success: false,
+      message: "سوالات لوڈ نہیں ہو سکے",
+    });
   }
 };
 
 // ADMIN: sawal ko public / private karna
 exports.updateAskPublic = async (req, res) => {
   try {
+    if (typeof req.body.isPublic !== "boolean") {
+      return res.status(400).json({
+        success: false,
+        message: "isPublic true ya false hona chahiye",
+      });
+    }
+
     const data = await AskQuestion.findByIdAndUpdate(
       req.params.id,
-      { isPublic: !!req.body.isPublic },
-      { new: true }
+      { $set: { isPublic: req.body.isPublic } },
+      { new: true, runValidators: true }
     );
-    res.json({ success: true, data });
+
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message: "سوال نہیں ملا",
+      });
+    }
+
+    return res.json({ success: true, data });
   } catch (err) {
-    res.status(500).json({ success: false });
+    console.error("updateAskPublic error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "سوال کی اشاعت تبدیل نہیں ہو سکی",
+    });
   }
 };

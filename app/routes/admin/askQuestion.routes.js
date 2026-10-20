@@ -32,12 +32,6 @@ router.patch("/:id/public", auth, controller.updateAskPublic);
 // ADMIN: jawab ka status badalna
 router.patch("/:id/status", auth, controller.updateAskStatus);
 
-// PUBLIC: website par approved sawalat dikhana
-router.get("/public", controller.getPublicAskQuestions);
-
-// ADMIN: sawalat dekhna
-router.get("/", auth, controller.getAskQuestions);
-
 // ADMIN: sawal delete karna
 router.delete("/:id", auth, controller.deleteAskQuestion);
 
