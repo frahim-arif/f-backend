@@ -64,6 +64,7 @@ const corrections = {
    "ath": "aath","dlal": "dalaail","biwi": "biwi", "dl": "dil", "mrizh": "mareez", "khbr": "khabar","ofat": "wafaat",fod: "food",klr: "kilar",chit: "chat" ,ji: "g",pi: "p",ti: "t","lrke": "ladke", "ka": "ka", "nam": "naam", "srf": "sirf", "mhmd": "Muhammad",  "hayya": "hai","monchho": "moochhon","ta": "taaw",  "ashh": "Aisha", "pkarti": "pukaarti", "thyt": "thin","nam": "naam",fathh : "fateha",
    "bcho": "bachchon",  "dini": "deeni", "dnioi": "duniyawi", "talim": "ta'leem","dae": "du'a", "masorh": "masnoon", "ke": "ke", "bjae": "bajaaye", "qran": "quraan", "krke": "karke","char": "chaar", "tnkhoah": "tankhwaah","dioti": "duty","chh": "6","roh": "rooh", "malq": "muallaq", "rhti": "rehti","khodkshi": "khudkushi","fqol": "fayaqulu", "rb": "rabbi", "rmn": "akraman","ann": "ahana","krae": "kiraye","fm": "فَأُمُّهُ", "ao": "هَاوِيَةٌ","f": "فِي", "ash": "عِيشَةٍ", "raz": "رَاضِيَةٍ","za": "zaaya",
    "bite": "beete",  "sht": "sihhat", "iabi": "yaabi", "mani": "maani", "janwar": "jaanwar", "mnt": "mannat", "joe": "juye", "sath": "saath", "kirm": "carrom", "khilne": "khelne", "oalo": "waalon",  "kirm": "carrom", "bord": "board", "mhia": "muhaaiya","hilth": "health", "anshorns": "insurance", "krana": "karaana","bad": "baad", "khon": "khoon", "tist": "test","lab": "lu'aab",  "psinh": "paseena","rshot": "rishwat", "afsr": "afsar",  "iha": "yahaan", "daot": "daawat","timm": "tayammum", "nsoar": "naswaar", 
+   "brth": "birthday", "de": "day", "sal": "saal", "grh": "girah", "mnana": "manaana",
 };
 
 function createSlug(text) {
