@@ -1,15 +1,14 @@
+
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const router = express.Router();
 
 const controller = require("../../controllers/admin/askQuestion.controller");
-
-// NOTE: app/middleware/ me auth file ka asli naam yahan likhein
 const auth = require("../../middleware/auth");
 
 const askLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 ghanta
-  max: 5, // 5 sawal per IP per ghanta
+  windowMs: 60 * 60 * 1000,
+  max: 5,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -18,12 +17,28 @@ const askLimiter = rateLimit({
   },
 });
 
-// PUBLIC: user sawal bhejta hai
+// PUBLIC: sawal bhejna
 router.post("/", askLimiter, controller.createAskQuestion);
 
-// ADMIN: token zaroori
+// PUBLIC: website par approved sawalat dikhana
+router.get("/public", controller.getPublicAskQuestions);
+
+// ADMIN: sawalat dekhna
 router.get("/", auth, controller.getAskQuestions);
+
+// ADMIN: public/private status
+router.patch("/:id/public", auth, controller.updateAskPublic);
+
+// ADMIN: jawab ka status badalna
 router.patch("/:id/status", auth, controller.updateAskStatus);
+
+// PUBLIC: website par approved sawalat dikhana
+router.get("/public", controller.getPublicAskQuestions);
+
+// ADMIN: sawalat dekhna
+router.get("/", auth, controller.getAskQuestions);
+
+// ADMIN: sawal delete karna
 router.delete("/:id", auth, controller.deleteAskQuestion);
 
 module.exports = router;
