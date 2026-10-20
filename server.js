@@ -166,9 +166,7 @@ server.use(
 );
 
 
-// Ask Question (user se aaye hue sawal)
-const askQuestionRoutes = require("./app/routes/askQuestion.routes");
-
+const askQuestionRoutes = require("./app/routes/admin/askQuestion.routes");
 server.use("/api/ask-question", askQuestionRoutes);
 // =====================================================
 // 404 - ALWAYS LAST
