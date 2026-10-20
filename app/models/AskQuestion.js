@@ -10,6 +10,7 @@ const askQuestionSchema = new mongoose.Schema(
       enum: ["pending", "answered"],
       default: "pending",
     },
+        isPublic: { type: Boolean, default: false, index: true },
   },
   { timestamps: true }
 );
