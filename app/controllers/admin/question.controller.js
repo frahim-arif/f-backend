@@ -338,6 +338,37 @@ exports.getQuestionBySlug = async (req, res) => {
   }
 };
 
+// PUBLIC: zyada padhe gaye sawal
+exports.getPopularQuestions = async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit, 10) || 8, 20);
+
+    const data = await Question.find({ views: { $gt: 0 } })
+      .sort({ views: -1 })
+      .limit(limit)
+      .select("question slug views");
+
+    res.json({ success: true, data });
+  } catch (err) {
+    console.error("getPopularQuestions error:", err);
+    res.status(500).json({ success: false });
+  }
+};
+
+// PUBLIC: view +1 (browser se bulaya jata hai)
+exports.addQuestionView = async (req, res) => {
+  try {
+    const slug = decodeURIComponent(req.params.slug).trim().toLowerCase();
+
+    await Question.updateOne({ slug }, { $inc: { views: 1 } });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("addQuestionView error:", err);
+    res.status(500).json({ success: false });
+  }
+};
+
 
 
 

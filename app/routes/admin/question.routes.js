@@ -24,4 +24,10 @@ router.put("/:id", questionController.updateQuestion);
 
 // Delete
 router.delete("/:id", questionController.deleteQuestion);
+
+// Popular
+router.get("/popular", questionController.getPopularQuestions);
+
+// View count
+router.post("/views/:slug", questionController.addQuestionView);
 module.exports = router;
