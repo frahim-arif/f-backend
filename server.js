@@ -168,6 +168,11 @@ server.use(
 
 const askQuestionRoutes = require("./app/routes/admin/askQuestion.routes");
 server.use("/api/ask-question", askQuestionRoutes);
+
+
+// Visitors (ginti)
+const visitorRoutes = require("./app/routes/visitor.routes");
+server.use("/api/visitors", visitorRoutes);
 // =====================================================
 // 404 - ALWAYS LAST
 // =====================================================
