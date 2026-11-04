@@ -29,5 +29,6 @@ router.delete("/:id", questionController.deleteQuestion);
 router.get("/popular", questionController.getPopularQuestions);
 
 // View count
+router.get("/views/:slug", questionController.getQuestionViews);
 router.post("/views/:slug", questionController.addQuestionView);
 module.exports = router;

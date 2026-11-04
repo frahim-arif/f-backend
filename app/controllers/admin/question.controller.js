@@ -355,17 +355,62 @@ exports.getPopularQuestions = async (req, res) => {
   }
 };
 
-// PUBLIC: view +1 (browser se bulaya jata hai)
+// PUBLIC: Get total views
+exports.getQuestionViews = async (req, res) => {
+  try {
+    const slug = decodeURIComponent(req.params.slug)
+      .trim()
+      .toLowerCase();
+
+    const question = await Question.findOne({ slug }).select("views");
+
+    if (!question) {
+      return res.status(404).json({
+        success: false,
+        message: "Question not found",
+      });
+    }
+
+    return res.json({
+      success: true,
+      views: question.views || 0,
+    });
+
+  } catch (err) {
+    console.error("getQuestionViews error:", err);
+    return res.status(500).json({ success: false });
+  }
+};
+
+
+// PUBLIC: Add one view
 exports.addQuestionView = async (req, res) => {
   try {
-    const slug = decodeURIComponent(req.params.slug).trim().toLowerCase();
+    const slug = decodeURIComponent(req.params.slug)
+      .trim()
+      .toLowerCase();
 
-    await Question.updateOne({ slug }, { $inc: { views: 1 } });
+    const question = await Question.findOneAndUpdate(
+      { slug },
+      { $inc: { views: 1 } },
+      { new: true }
+    ).select("views");
 
-    res.json({ success: true });
+    if (!question) {
+      return res.status(404).json({
+        success: false,
+        message: "Question not found",
+      });
+    }
+
+    return res.json({
+      success: true,
+      views: question.views,
+    });
+
   } catch (err) {
     console.error("addQuestionView error:", err);
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false });
   }
 };
 
