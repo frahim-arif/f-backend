@@ -184,6 +184,7 @@ exports.createQuestion = async (req, res) => {
 };
 
 
+
 // ===========================
 // PUBLIC: Search Questions / Fatawa
 // ===========================
@@ -199,7 +200,6 @@ exports.searchQuestions = async (req, res) => {
       });
     }
 
-    // Escape special regex characters
     const escapedText = searchText.replace(
       /[.*+?^${}()|[\]\\]/g,
       "\\$&"
@@ -207,13 +207,9 @@ exports.searchQuestions = async (req, res) => {
 
     const searchRegex = new RegExp(escapedText, "i");
 
-   const questions = await Question.find({
-  question: searchRegex,
-})
-  .select("question slug category createdAt")
-  .sort({ createdAt: -1 })
-  .limit(30)
-  .lean();
+    const questions = await Question.find({
+      question: searchRegex
+    })
       .select("question slug category createdAt")
       .sort({ createdAt: -1 })
       .limit(30)
@@ -226,7 +222,7 @@ exports.searchQuestions = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("❌ Search Questions Error:", err);
+    console.error("Search Questions Error:", err);
 
     return res.status(500).json({
       success: false,
@@ -235,6 +231,7 @@ exports.searchQuestions = async (req, res) => {
     });
   }
 };
+
 
 
 // ===========================
