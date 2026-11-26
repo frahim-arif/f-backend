@@ -207,16 +207,13 @@ exports.searchQuestions = async (req, res) => {
 
     const searchRegex = new RegExp(escapedText, "i");
 
-    const questions = await Question.find({
-      $or: [
-        { question: searchRegex },
-        { answer: searchRegex },
-        { metaTitle: searchRegex },
-        { metaDescription: searchRegex },
-        { keywords: searchRegex },
-        { category: searchRegex },
-      ],
-    })
+   const questions = await Question.find({
+  question: searchRegex,
+})
+  .select("question slug category createdAt")
+  .sort({ createdAt: -1 })
+  .limit(30)
+  .lean();
       .select("question slug category createdAt")
       .sort({ createdAt: -1 })
       .limit(30)
