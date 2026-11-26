@@ -183,6 +183,63 @@ exports.createQuestion = async (req, res) => {
   }
 };
 
+
+// ===========================
+// PUBLIC: Search Questions / Fatawa
+// ===========================
+exports.searchQuestions = async (req, res) => {
+  try {
+    const searchText = (req.query.q || "").trim().slice(0, 150);
+
+    if (!searchText) {
+      return res.status(400).json({
+        success: false,
+        message: "Search query is required",
+        data: [],
+      });
+    }
+
+    // Escape special regex characters
+    const escapedText = searchText.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      "\\$&"
+    );
+
+    const searchRegex = new RegExp(escapedText, "i");
+
+    const questions = await Question.find({
+      $or: [
+        { question: searchRegex },
+        { answer: searchRegex },
+        { metaTitle: searchRegex },
+        { metaDescription: searchRegex },
+        { keywords: searchRegex },
+        { category: searchRegex },
+      ],
+    })
+      .select("question slug category createdAt")
+      .sort({ createdAt: -1 })
+      .limit(30)
+      .lean();
+
+    return res.json({
+      success: true,
+      total: questions.length,
+      data: questions,
+    });
+
+  } catch (err) {
+    console.error("❌ Search Questions Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Search failed",
+      data: [],
+    });
+  }
+};
+
+
 // ===========================
 // 📌 Get All Questions
 // ===========================

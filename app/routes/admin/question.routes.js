@@ -6,6 +6,13 @@ const redirect301 = require("../../middleware/redirect301");
 // Create
 router.post("/", questionController.createQuestion);
 
+
+// Search Questions
+router.get("/search", questionController.searchQuestions);
+
+
+
+
 // Get all
 router.get("/", questionController.getQuestions);
 
